@@ -1,0 +1,18 @@
+version: '3.5'
+services:
+
+  mysql:
+    image: mariadb:10.3.11
+    # Host(`mysql.local.dev`) Used by hostnames.sh script
+    container_name: mysql.local.dev
+    restart: unless-stopped
+    volumes:
+      - ${PWD}/config/mysql/initdb.d:/docker-entrypoint-initdb.d
+      - ${PWD}/data/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${ROOT_PASSWORD}
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+    ports:
+      - 3306:3306
+    networks:
+      - devel
