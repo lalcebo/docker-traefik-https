@@ -1,0 +1,14 @@
+http:
+  routers:
+    traefik:
+      rule: Host(`proxy.local.dev`)
+      service: 'api@internal'
+      tls:
+        domains:
+          - main: local.dev
+            sans:
+              - '*.local.dev'
+tls:
+  certificates:
+    - certFile: /etc/certs/local.dev.crt
+      keyFile: /etc/certs/local.dev.key
