@@ -20,7 +20,7 @@ containers to use for your projects on local like MySQL (MariaDB), Redis, Memcac
 SET COMPOSE_CONVERT_WINDOWS_PATHS=1
 ```
 
-### How to start
+## How to start
 
 ```shell
 # Clone
@@ -49,7 +49,7 @@ cp .env.dist .env
 ./start.sh
 ```
 
-### Hosts & Dashboard
+## Hosts & Dashboard
 
 * Use [add_hosts.sh](add_hosts.sh) script for automatically add the virtual hosts to your windows or linux hosts file.
   Required admin privileges.
