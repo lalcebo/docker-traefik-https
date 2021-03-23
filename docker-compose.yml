@@ -28,3 +28,7 @@ services:
 networks:
   devel:
     external: true
+
+volumes:
+  docker-traefik-https:
+    external: true
