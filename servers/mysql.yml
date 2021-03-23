@@ -3,7 +3,7 @@ services:
 
   mysql:
     image: mariadb:10.3.11
-    # Host(`mysql.local.dev`) Used by hostnames.sh script
+    # Host(`mysql.local.dev`) Used by add_hosts.sh script
     container_name: mysql.local.dev
     restart: unless-stopped
     volumes:

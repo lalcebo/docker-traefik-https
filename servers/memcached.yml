@@ -3,7 +3,7 @@ service:
 
   redis:
     image: memcached
-    # Host(`memcached.local.dev`) Used by hostnames.sh script
+    # Host(`memcached.local.dev`) Used by add_hosts.sh script
     container_name: memcached.local.dev
     ports:
       - 11211:11211

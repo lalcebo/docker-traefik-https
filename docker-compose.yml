@@ -3,7 +3,7 @@ services:
 
   proxy:
     image: traefik:v2.4
-    # Host(`proxy.local.dev`) Used by hostnames.sh script
+    # Host(`proxy.local.dev`) Used by add_hosts.sh script
     container_name: proxy.local.dev
     restart: unless-stopped
     security_opt:

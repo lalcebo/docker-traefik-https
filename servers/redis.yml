@@ -3,7 +3,7 @@ service:
 
   redis:
     image: redis
-    # Host(`redis.local.dev`) Used by hostnames.sh script
+    # Host(`redis.local.dev`) Used by add_hosts.sh script
     container_name: redis.local.dev
     ports:
       - 6379:6379
