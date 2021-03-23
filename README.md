@@ -40,7 +40,7 @@ cp .env.dist .env
 
 ### Host File
 
-Use [add_hosts.sh](add_hosts.sh) script for automatically add the virtual host domains to your windows or linux hosts file. Require admin privileges.
+Use [add_hosts.sh](add_hosts.sh) script for automatically add the virtual hosts to your windows or linux hosts file. Required admin privileges.
 
 Now, start containers with:
 
