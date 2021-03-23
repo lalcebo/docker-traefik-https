@@ -1,6 +1,11 @@
 # Traefik v2 HTTPS
 
-Traefik v2 on localhost with HTTPS support using **local.dev** domain.
+[![Software License][ico-license]][link-license]
+
+## Introduction
+
+Traefik v2 on localhost with HTTPS support using **local.dev** domain. This project creates different server app
+containers to use for your projects on local like MySQL (MariaDB), Redis, Memcached or anothers.
 
 ### Requirements
 
@@ -15,7 +20,7 @@ Traefik v2 on localhost with HTTPS support using **local.dev** domain.
 SET COMPOSE_CONVERT_WINDOWS_PATHS=1
 ```
 
-To get started:
+### How to start
 
 ```shell
 # Clone
@@ -30,26 +35,32 @@ mkcert \
   -key-file config/traefik/certs/local.dev.key \
   'local.dev' '*.local.dev'
 
-# Create network that will be used:
+# Create network that will be used
 docker network create docker-traefik-https
 
-# Create volume that will be used:
+# Create volume that will be used
 docker volume create docker-traefik-https
 
 # Create .env file that will be use by scripts.
 # NOTE: Remember edit for enable the apps & servers you want.
 cp .env.dist .env
-```
 
-### Host File
-
-Use [add_hosts.sh](add_hosts.sh) script for automatically add the virtual hosts to your windows or linux hosts file. Required admin privileges.
-
-Now, start containers with:
-
-```shell
-# Start Project
+# Now, start containers
 ./start.sh
 ```
 
-You can now go to your browser at [proxy.local.dev](https://proxy.local.dev) for Træfik dashboard, enjoy 🚀!
+### Hosts & Dashboard
+
+* Use [add_hosts.sh](add_hosts.sh) script for automatically add the virtual hosts to your windows or linux hosts file.
+  Required admin privileges.
+* You can now go to your browser at [proxy.local.dev](https://proxy.local.dev) for Træfik dashboard, enjoy 🚀!
+
+## About
+
+I'll try to maintain this project as simple as possible, but Pull Requests are welcomed!
+
+## License
+
+The MIT License (MIT). Please see [License File][link-license] for more information.
+
+[link-license]: LICENSE
