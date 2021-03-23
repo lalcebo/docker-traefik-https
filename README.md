@@ -63,4 +63,6 @@ I'll try to maintain this project as simple as possible, but Pull Requests are w
 
 The MIT License (MIT). Please see [License File][link-license] for more information.
 
+[ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
+
 [link-license]: LICENSE
