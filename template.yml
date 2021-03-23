@@ -20,5 +20,5 @@ services:
       - devel
 
 networks:
-  devel:
+  docker-traefik-https:
     external: true

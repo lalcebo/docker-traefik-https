@@ -31,7 +31,7 @@ mkcert \
   'local.dev' '*.local.dev'
 
 # Create network that will be used:
-docker network create devel
+docker network create docker-traefik-https
 
 # Create volume that will be used:
 docker volume create docker-traefik-https

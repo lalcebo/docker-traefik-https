@@ -11,7 +11,7 @@ services:
       - traefik.http.routers.dbadmin.rule=Host(`phpmyadmin.local.dev`)
       - traefik.http.routers.dbadmin.tls=true
     networks:
-      - devel
+      - docker-traefik-https
     depends_on:
       - proxy
       - mysql

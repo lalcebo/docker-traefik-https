@@ -8,3 +8,5 @@ service:
     ports:
       - 6379:6379
     command: [ 'redis-server', '--appendonly', 'yes', '--requirepass ${ROOT_PASSWORD}' ]
+    networks:
+      - docker-traefik-https

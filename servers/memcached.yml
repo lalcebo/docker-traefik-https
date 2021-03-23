@@ -7,3 +7,5 @@ service:
     container_name: memcached.local.dev
     ports:
       - 11211:11211
+    networks:
+      - docker-traefik-https
