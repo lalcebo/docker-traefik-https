@@ -9,7 +9,7 @@ services:
     labels:
       # Enable this container to be mapped by traefik
       # For more information, see: https://docs.traefik.io/providers/docker/#exposedbydefault
-      - traefik.enable=true'
+      - traefik.enable=true
       # URL to reach this container
       - traefik.http.routers.app.rule=Host(`app.local.dev`)
       # Activation of TLS
