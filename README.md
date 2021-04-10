@@ -55,6 +55,12 @@ cp .env.dist .env
   Required admin privileges.
 * You can now go to your browser at [proxy.local.dev](https://proxy.local.dev) for Træfik dashboard, enjoy 🚀!
 
+## Postman
+
+Enable CA Certificates setting and add "rootCA.pem" file. To know it location run ```mkcert --CAROOT```
+
+![CA Certificates](docs/postman_settings_cert.png)
+
 ## About
 
 I'll try to maintain this project as simple as possible, but Pull Requests are welcomed!
