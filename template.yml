@@ -14,7 +14,8 @@ services:
       - traefik.http.routers.app.rule=Host(`app.local.dev`)
       # Activation of TLS
       - traefik.http.routers.app.tls=true
-      # If the domain is different.
+      # If the domain is different
+      # NOTE: Remember generate a cert for all domain and subdomains
       # - traefik.http.routers.app.domains[0].main=another-domain.dev
       # - traefik.http.routers.app.domains[0].sans=*.another-domain.dev
       # If port is different than 80, use the following service:
