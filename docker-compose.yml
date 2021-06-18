@@ -28,7 +28,3 @@ services:
 networks:
   docker-traefik-https:
     external: true
-
-volumes:
-  docker-traefik-https:
-    external: true

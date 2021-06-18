@@ -38,9 +38,6 @@ mkcert \
 # Create network that will be used
 docker network create docker-traefik-https
 
-# Create volume that will be used
-docker volume create docker-traefik-https
-
 # Create .env file that will be use by scripts.
 # NOTE: Remember edit for enable the apps & servers you want.
 cp .env.dist .env
