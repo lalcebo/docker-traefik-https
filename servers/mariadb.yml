@@ -1,14 +1,14 @@
 version: '3.5'
 services:
 
-  mysql:
+  mariadb:
     image: mariadb:10.3.11
-    # Host(`mysql.local.dev`) Used by add_hosts.sh script
-    container_name: mysql.local.dev
+    # Host(`mariadb.local.dev`) Used by add_hosts.sh script
+    container_name: mariadb.local.dev
     restart: unless-stopped
     volumes:
       - ${PWD}/config/mysql/initdb.d:/docker-entrypoint-initdb.d
-      - mysql-data:/var/lib/mysql
+      - mariadb-data:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=${ROOT_PASSWORD}
       - MYSQL_ALLOW_EMPTY_PASSWORD=true
@@ -18,4 +18,4 @@ services:
       - docker-traefik-https
 
 volumes:
-  mysql-data:
+  mariadb-data:
