@@ -1,0 +1,21 @@
+version: '3.5'
+services:
+
+  mysql:
+    image: mysql:8.0
+    # Host(`mysql.local.dev`) Used by add_hosts.sh script
+    container_name: mysql.local.dev
+    restart: unless-stopped
+    volumes:
+      - ${PWD}/config/mysql/initdb.d:/docker-entrypoint-initdb.d
+      - mysql-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${ROOT_PASSWORD}
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+    ports:
+      - 3306:3306
+    networks:
+      - docker-traefik-https
+
+volumes:
+  mysql-data:
