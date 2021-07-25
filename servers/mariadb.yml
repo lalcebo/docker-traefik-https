@@ -7,7 +7,7 @@ services:
     container_name: mariadb.local.dev
     restart: unless-stopped
     volumes:
-      - ${PWD}/config/mysql/initdb.d:/docker-entrypoint-initdb.d
+      - ${PWD}/config/mariadb/initdb.d:/docker-entrypoint-initdb.d
       - mariadb-data:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=${ROOT_PASSWORD}
