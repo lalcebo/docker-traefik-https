@@ -4,8 +4,8 @@ services:
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: phpmyadmin.local.dev
-    environment:
-      - PMA_HOST=mysql.local.dev
+    env_file:
+      - ${PWD}/env/phpmyadmin.env
     labels:
       - traefik.enable=true
       - traefik.http.routers.dbadmin.rule=Host(`phpmyadmin.local.dev`)
@@ -14,4 +14,3 @@ services:
       - docker-traefik-https
     depends_on:
       - proxy
-      - mysql
