@@ -5,7 +5,7 @@
 ## Introduction
 
 Traefik v2 on localhost with HTTPS support using **local.dev** domain. This project creates different server app
-containers to use for your projects on local like MySQL (MariaDB), Redis, Memcached or anothers.
+containers to use for your projects on local like MySQL, MariaDB, Redis, Memcached or another.
 
 ### Requirements
 
