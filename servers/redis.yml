@@ -6,7 +6,7 @@ services:
     # Host(`redis.local.dev`) Used by add_hosts.sh script
     container_name: redis.local.dev
     ports:
-      - 6379:6379
+      - "6379:6379"
     command: [ 'redis-server', '--appendonly', 'yes', '--requirepass ${ROOT_PASSWORD}' ]
     networks:
       - docker-traefik-https
