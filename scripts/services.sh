@@ -12,5 +12,8 @@ done
 # Servers
 SERVERS=($ENABLE_SERVERS)
 for i in "${SERVERS[@]}"; do
+    if [ "$i" = "dynamodb" ] && [ ! -d .docker/dynamodb ]; then
+        mkdir -p .docker/dynamodb && chmod -R 777 .docker/dynamodb
+    fi
     COMPOSE_FILE=${COMPOSE_FILE}${PATH_SEPARATOR}./servers/${i}.yml
 done

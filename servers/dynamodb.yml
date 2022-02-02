@@ -1,0 +1,16 @@
+version: '3.5'
+services:
+
+  dynamodb:
+    image: amazon/dynamodb-local:latest
+    # Host(`dynamodb.local.dev`) Used by add_hosts.sh script
+    container_name: dynamodb.local.dev
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - .docker/dynamodb:/home/dynamodblocal/data
+    working_dir: /home/dynamodblocal
+    command: ["-jar", "DynamoDBLocal.jar", "-sharedDb", "-dbPath", "./data"]
+    networks:
+      - docker-traefik-https
