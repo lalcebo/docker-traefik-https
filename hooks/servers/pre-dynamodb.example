@@ -1,6 +1,0 @@
-#!/usr/bin/env sh
-
-if [ ! -d .docker/dynamodb ]; then
-    mkdir -p .docker/dynamodb
-    chmod -R 777 .docker/dynamodb
-fi

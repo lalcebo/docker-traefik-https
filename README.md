@@ -51,6 +51,24 @@ cp .env.dist .env
 ./start.sh
 ```
 
+## Hooks
+
+All hooks are stored in the hooks subdirectory
+
+* The `pre-<service>` hook is run first before start the container.
+* The `post-<service>` hook is run after stop the container.
+
+Example `hooks/servers/pre-dynamodb` hook:
+```shell
+#!/usr/bin/env sh
+
+# the folder for the db file must be writable by all
+if [ ! -d .docker/dynamodb ]; then
+    mkdir -p .docker/dynamodb
+    chmod -R 777 .docker/dynamodb
+fi
+```
+
 ## Hosts & Dashboard
 
 * Use [add_hosts.sh](add_hosts.sh) script for automatically add the virtual hosts to your windows or linux hosts file.
