@@ -9,3 +9,5 @@ services:
       - "11211:11211"
     networks:
       - docker-traefik-https
+    labels:
+      - traefik.enable=false

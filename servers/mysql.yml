@@ -16,6 +16,8 @@ services:
       - "3306:3306"
     networks:
       - docker-traefik-https
+    labels:
+      - traefik.enable=false
 
 volumes:
   mysql-data:
