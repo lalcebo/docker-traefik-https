@@ -10,3 +10,5 @@ services:
     command: [ 'redis-server', '--appendonly', 'yes', '--requirepass ${ROOT_PASSWORD}' ]
     networks:
       - docker-traefik-https
+    labels:
+      - traefik.enable=false
