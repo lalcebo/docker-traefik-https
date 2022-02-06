@@ -29,7 +29,12 @@ git clone https://github.com/lalcebo/docker-traefik-https.git && cd docker-traef
 # If it's the first install of mkcert, run
 mkcert -install
 
+# Copy config.yml.dist file to config.yml
+cp config/traefik/config.yml.dist config/traefik/config.yml
+
 # Generate certificate for domain 'local.dev', and their sub-domains '*.local.dev'
+# NOTE: You can generate as many certificates for domains as you want, remember to
+#       edit the config.yml file and add config section for them.
 mkcert \
   -cert-file config/traefik/certs/local.dev.crt \
   -key-file config/traefik/certs/local.dev.key \
