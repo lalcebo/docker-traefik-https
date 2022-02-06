@@ -11,13 +11,13 @@ services:
       # For more information, see: https://docs.traefik.io/providers/docker/#exposedbydefault
       - traefik.enable=true
       # URL to reach this container
-      - traefik.http.routers.app.rule=Host(`app.local.dev`)
+      - traefik.http.routers.<service_name>.rule=Host(`app.local.dev`)
       # Activation of TLS
-      - traefik.http.routers.app.tls=true
+      - traefik.http.routers.<service_name>.tls=true
       # If the domain is different to default, you should set the domain.
       # NOTE: Remember generate a cert for all domain and subdomains
-      # - traefik.http.routers.app.domains[0].main=another-domain.dev
-      # - traefik.http.routers.app.domains[0].sans=*.another-domain.dev
+      # - traefik.http.routers.<service_name>.domains[0].main=another-domain.dev
+      # - traefik.http.routers.<service_name>.domains[0].sans=*.another-domain.dev
       # If port is different from 80, use the following service:
       # - traefik.http.services.<service_name>.loadbalancer.server.port=<port>
     networks:
