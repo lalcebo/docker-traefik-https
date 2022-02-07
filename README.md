@@ -53,10 +53,11 @@ cp .env.dist .env
 
 ## Hooks
 
-All hooks are stored in the hooks subdirectory
+All hooks are stored in the hooks subdirectory.
 
-* The `pre-<service>` hook is run first before start the container.
-* The `post-<service>` hook is run after stop the container.
+* The `pre-<service>` hook is run before start the container.
+* The `post-<service>` hook is run after start the container.
+* The `stop-<service>` hook is run after stop the container.
 
 Example `hooks/servers/pre-dynamodb` hook:
 ```shell
