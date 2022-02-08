@@ -4,8 +4,7 @@
 . ./initscripts.sh
 
 # Execute pre hooks
-executePreHooks "$ENABLE_APPS"
-executePreHooks "$ENABLE_SERVERS"
+executeHooks pre "$ENABLE_APPS,$ENABLE_SERVERS"
 
 echo '---------------------------------------------------------------------------'
 echo '--- Recreating Containers'
@@ -14,5 +13,4 @@ docker-compose up -d --remove-orphans
 echo
 
 # Execute post hooks
-executePostHooks "$ENABLE_APPS"
-executePostHooks "$ENABLE_SERVERS"
+executeHooks post "$ENABLE_APPS,$ENABLE_SERVERS"

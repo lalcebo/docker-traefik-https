@@ -12,37 +12,16 @@ isWinPlatform() {
 }
 
 ##
-# Execute pre hooks scripts
-# @usage executePreHooks $hooks
+# Execute hooks scripts
+# @usage executeHooks type $hooks
 ##
-executePreHooks() {
+executeHooks() {
+    local EVENT=$1
+    shift 1
     local HOOKS=($@)
-    for i in "${HOOKS[@]}"; do
-        test -f "./hooks/apps/pre-$i" && . "./hooks/apps/pre-$i"
-        test -f "./hooks/servers/pre-$i" && . "./hooks/servers/pre-$i"
-    done
-}
-
-##
-# Execute post hooks scripts
-# @usage executePostHooks $hooks
-##
-executePostHooks() {
-    local HOOKS=($@)
-    for i in "${HOOKS[@]}"; do
-        test -f "./hooks/apps/post-$i" && . "./hooks/apps/post-$i"
-        test -f "./hooks/servers/post-$i" && . "./hooks/servers/post-$i"
-    done
-}
-
-##
-# Execute stop hooks scripts
-# @usage executeStopHooks $hooks
-##
-executeStopHooks() {
-    local HOOKS=($@)
-    for i in "${HOOKS[@]}"; do
-        test -f "./hooks/apps/stop-$i" && . "./hooks/apps/stop-$i"
-        test -f "./hooks/servers/stop-$i" && . "./hooks/servers/stop-$i"
+    for this in "${HOOKS[@]}"; do
+        test -n "$this" && echo "Executing $EVENT hooks for $this..." || continue
+        test -f "./hooks/apps/$EVENT-$this" && . "./hooks/apps/$EVENT-$this"
+        test -f "./hooks/servers/$EVENT-$this" && . "./hooks/servers/$EVENT-$this"
     done
 }

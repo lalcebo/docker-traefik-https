@@ -10,8 +10,7 @@ docker-compose down --remove-orphans
 echo
 
 # Execute stop hooks
-executeStopHooks "$ENABLE_APPS"
-executeStopHooks "$ENABLE_SERVERS"
+executeHooks stop "$ENABLE_APPS,$ENABLE_SERVERS"
 
 echo '---------------------------------------------------------------------------'
 echo '--- Displaying Running Containers'

@@ -13,12 +13,10 @@ docker-compose down --remove-orphans
 echo
 
 # Execute stop hooks
-executeStopHooks "$ENABLE_APPS"
-executeStopHooks "$ENABLE_SERVERS"
+executeHooks stop "$ENABLE_APPS,$ENABLE_SERVERS"
 
 # Execute pre hooks
-executePreHooks "$ENABLE_APPS"
-executePreHooks "$ENABLE_SERVERS"
+executeHooks pre "$ENABLE_APPS,$ENABLE_SERVERS"
 
 echo
 echo '---------------------------------------------------------------------------'
@@ -30,8 +28,7 @@ docker-compose up -d --remove-orphans
 echo
 
 # Execute post hooks
-executePostHooks "$ENABLE_APPS"
-executePostHooks "$ENABLE_SERVERS"
+executeHooks post "$ENABLE_APPS,$ENABLE_SERVERS"
 
 docker ps
 echo
