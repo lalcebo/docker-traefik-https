@@ -12,6 +12,10 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=${ROOT_PASSWORD}
       - MYSQL_ALLOW_EMPTY_PASSWORD=true
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-p${ROOT_PASSWORD}"]
+      retries: 3
+      timeout: 5s
     ports:
       - "3306:3306"
     networks:
