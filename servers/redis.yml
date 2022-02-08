@@ -7,8 +7,13 @@ services:
     container_name: redis.local.dev
     ports:
       - "6379:6379"
-    command: [ 'redis-server', '--appendonly', 'yes', '--requirepass ${ROOT_PASSWORD}' ]
+    command: ['redis-server', '--appendonly', 'yes', '--requirepass ${ROOT_PASSWORD}']
+    volumes:
+      - redis-data:/data
     networks:
       - docker-traefik-https
     labels:
       - traefik.enable=false
+
+volumes:
+  redis-data:
