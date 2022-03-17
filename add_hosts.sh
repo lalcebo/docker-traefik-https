@@ -4,8 +4,6 @@
 # shellcheck disable=SC2046
 # shellcheck disable=SC2164
 
-cd $(dirname $(readlink -f "$0"))
-
 # Load commons functions
 . ./scripts/functions.sh
 
