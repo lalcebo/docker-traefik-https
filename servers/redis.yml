@@ -13,7 +13,7 @@ services:
       retries: 3
       timeout: 5s
     volumes:
-      - redis-data:/data
+      - redis-data:/data:delegated
     networks:
       - docker-traefik-https
     labels:
