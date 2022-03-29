@@ -5,6 +5,7 @@ services:
     image: redis
     # Host(`redis.local.dev`) Used by add_hosts.sh script
     container_name: redis.local.dev
+    restart: unless-stopped
     ports:
       - "6379:6379"
     command: ["redis-server", "--appendonly", "yes", "--requirepass ${ROOT_PASSWORD}"]

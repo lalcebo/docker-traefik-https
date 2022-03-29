@@ -5,6 +5,7 @@ services:
     image: memcached
     # Host(`memcached.local.dev`) Used by add_hosts.sh script
     container_name: memcached.local.dev
+    restart: unless-stopped
     ports:
       - "11211:11211"
     networks:
