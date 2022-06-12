@@ -1,11 +1,8 @@
 FROM ghcr.io/lalcebo/docker-traefik-https/opensuse-base:latest as builder
 WORKDIR /builder
 
-ARG PHP_81_REPOSITORY=https://download.opensuse.org/repositories/devel:/languages:/php/openSUSE_Leap_15.4/devel:languages:php.repo
 ARG XDEBUG_VERSION=3.1.5
 
-# Comunity repo for PHP 8.1
-RUN zypper --non-interactive ar -G ${PHP_81_REPOSITORY}
 RUN zypper up -y \
     # Install packages
     && zypper -q --non-interactive install \
@@ -35,9 +32,8 @@ FROM ghcr.io/lalcebo/docker-traefik-https/opensuse-base:latest
 
 LABEL maintainer="Jorge P. Hernandez Lalcebo <lalcebo2003@gmail.com>"
 LABEL org.opencontainers.image.source="https://github.com/lalcebo/docker-traefik-https"
-LABEL org.opencontainers.image.description="This image contains openSUSE Leap Apache with PHP 8.1, Composer & NodeJS. Use only for development."
+LABEL org.opencontainers.image.description="This image contains openSUSE Leap Apache with PHP 8.0, Composer & NodeJS. Use only for development."
 
-ARG PHP_81_REPOSITORY=https://download.opensuse.org/repositories/devel:/languages:/php/openSUSE_Leap_15.4/devel:languages:php.repo
 ARG XDEBUG_VERSION=3.1.5
 
 # ENV vars
@@ -65,8 +61,6 @@ ENV PHP_XDEBUG_CLIENT_PORT=${PHP_XDEBUG_CLIENT_PORT:-9003}
 ENV PHP_XDEBUG_CLIENT_DISCOVERY_HEADER=${PHP_XDEBUG_CLIENT_DISCOVERY_HEADER:-}
 ENV PHP_XDEBUG_OUTPUT_DIR=${PHP_XDEBUG_OUTPUT_DIR:-/tmp}
 
-# Comunity repo for PHP 8.1
-RUN zypper --non-interactive ar -G ${PHP_81_REPOSITORY}
 RUN zypper --non-interactive refresh \
     # Update and install packages
     && zypper up -y && zypper --non-interactive install \
@@ -121,7 +115,7 @@ EXPOSE 80
 WORKDIR /srv/www
 
 # Start
-ADD php-8.1-apache2/docker-entrypoint.sh /usr/sbin/docker-entrypoint.sh
+ADD php-8.0-apache/docker-entrypoint.sh /usr/sbin/docker-entrypoint.sh
 ADD .shared/scripts/github.sh /usr/sbin/github.sh
 ADD .shared/scripts/composer.sh /usr/sbin/composer.sh
 

@@ -17,7 +17,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     docker build -t "$DOCKER_REGISTRY"/opensuse-base -f builds/openSUSE_Base.dockerfile builds/
 
     # Apache
-    docker build -t "${DOCKER_REGISTRY}/php-7.4-apache2" -f builds/php-7.4-apache2/Dockerfile builds/
-    docker build -t "${DOCKER_REGISTRY}/php-8.0-apache2" -f builds/php-8.0-apache2/Dockerfile builds/
-    docker build -t "${DOCKER_REGISTRY}/php-8.1-apache2" -f builds/php-8.1-apache2/Dockerfile builds/
+    docker build -t "${DOCKER_REGISTRY}/php-7.4-apache" -f builds/php-7.4-apache/Dockerfile builds/
+    docker build -t "${DOCKER_REGISTRY}/php-8.0-apache" -f builds/php-8.0-apache/Dockerfile builds/
+    docker build -t "${DOCKER_REGISTRY}/php-8.1-apache" -f builds/php-8.1-apache/Dockerfile builds/
 fi
