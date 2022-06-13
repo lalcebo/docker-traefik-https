@@ -20,4 +20,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     docker build -t "${DOCKER_REGISTRY}/php-7.4-apache" -f builds/php-7.4-apache/Dockerfile builds/
     docker build -t "${DOCKER_REGISTRY}/php-8.0-apache" -f builds/php-8.0-apache/Dockerfile builds/
     docker build -t "${DOCKER_REGISTRY}/php-8.1-apache" -f builds/php-8.1-apache/Dockerfile builds/
+
+    # Nginx
+    docker build -t "${DOCKER_REGISTRY}/php-8.1-nginx" -f builds/php-8.1-nginx/Dockerfile builds/
 fi

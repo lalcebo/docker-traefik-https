@@ -15,3 +15,6 @@ echo '--------------------------------------------------------------------------
 docker push "${DOCKER_REGISTRY}/php-7.4-apache:latest"
 docker push "${DOCKER_REGISTRY}/php-8.0-apache:latest"
 docker push "${DOCKER_REGISTRY}/php-8.1-apache:latest"
+
+# Nginx
+docker push "${DOCKER_REGISTRY}/php-8.1-nginx:latest"
