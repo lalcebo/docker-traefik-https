@@ -1,9 +1,9 @@
-version: "3.5"
+version: "3.7"
 
 services:
-  app:
+  <service_name>:
     image: containous/whoami
-    container_name: app
+    container_name: <service_name>
     security_opt:
       - no-new-privileges:true
     labels:

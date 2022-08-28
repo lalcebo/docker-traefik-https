@@ -1,4 +1,4 @@
-version: "3.5"
+version: "3.7"
 services:
 
   dynamodb:
@@ -14,5 +14,3 @@ services:
     command: ["-jar", "DynamoDBLocal.jar", "-sharedDb", "-dbPath", "./data"]
     networks:
       - docker-traefik-https
-    labels:
-      - traefik.enable=false

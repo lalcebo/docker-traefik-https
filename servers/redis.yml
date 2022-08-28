@@ -1,4 +1,4 @@
-version: "3.5"
+version: "3.7"
 services:
 
   redis:
@@ -17,8 +17,6 @@ services:
       - redis-data:/data:delegated
     networks:
       - docker-traefik-https
-    labels:
-      - traefik.enable=false
 
 volumes:
   redis-data:

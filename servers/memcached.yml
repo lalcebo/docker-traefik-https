@@ -1,4 +1,4 @@
-version: "3.5"
+version: "3.7"
 services:
 
   redis:
@@ -10,5 +10,3 @@ services:
       - "11211:11211"
     networks:
       - docker-traefik-https
-    labels:
-      - traefik.enable=false

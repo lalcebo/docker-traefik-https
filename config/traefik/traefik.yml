@@ -11,6 +11,8 @@ api:
 
 providers:
   docker:
+    exposedByDefault: false
+    network: docker-traefik-https
     endpoint: unix:///var/run/docker.sock
     watch: true
   file:
