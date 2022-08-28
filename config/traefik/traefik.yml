@@ -5,6 +5,9 @@ log:
   level: INFO
   format: common
 
+accessLog:
+  bufferingSize: 100
+
 api:
   dashboard: true
   insecure: true
