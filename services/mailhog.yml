@@ -1,0 +1,16 @@
+version: "3.7"
+services:
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: mailhog.local.dev
+    restart: unless-stopped
+    ports:
+      - "1025:1025"
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.mailhog.rule=Host(`mailhog.local.dev`)
+      - traefik.http.routers.mailhog.tls=true
+      - traefik.http.services.mailhog.loadbalancer.server.port=8025
+    networks:
+      - docker-traefik-https
