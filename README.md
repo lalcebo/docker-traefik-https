@@ -44,7 +44,7 @@ mkcert \
 docker network create docker-traefik-https
 
 # Create .env file that will be use by scripts.
-# NOTE: Remember edit for enable the apps & servers you want.
+# NOTE: Remember edit for enable the services you want.
 cp .env.dist .env
 
 # Now, start containers
@@ -59,7 +59,7 @@ All hooks are stored in the hooks subdirectory.
 * The `post-<service>` hook is run after start the container.
 * The `stop-<service>` hook is run after stop the container.
 
-Example `hooks/servers/pre-dynamodb` hook:
+Example `hooks/pre-dynamodb` hook:
 ```shell
 #!/usr/bin/env sh
 

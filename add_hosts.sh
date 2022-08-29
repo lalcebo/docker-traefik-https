@@ -16,7 +16,7 @@ isWinPlatform && HOSTS_PATH='/c/Windows/System32/drivers/etc/hosts' || HOSTS_PAT
 # Get all projects yml files with VIRTUAL_HOSTS env
 # shellcheck disable=SC2039
 # shellcheck disable=SC2207
-SERVICES=($(find apps/ servers/ -name \*.yml -type f))
+SERVICES=($(find services/ -name \*.yml -type f))
 
 # shellcheck disable=SC2068
 for FILE in docker-compose.yml docker-compose-local.yml ${SERVICES[@]}; do

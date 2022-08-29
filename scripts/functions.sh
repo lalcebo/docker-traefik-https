@@ -20,8 +20,9 @@ executeHooks() {
     shift 1
     local HOOKS=($@)
     for this in "${HOOKS[@]}"; do
-        test -n "$this" && echo "Executing $EVENT hooks for $this..." || continue
-        test -f "./hooks/apps/$EVENT-$this" && . "./hooks/apps/$EVENT-$this"
-        test -f "./hooks/servers/$EVENT-$this" && . "./hooks/servers/$EVENT-$this"
+        if [[ -n "$this" && -f "./hooks/$EVENT-$this" ]]; then
+            echo "Executing $EVENT hooks for $this..."
+            source "./hooks/$EVENT-$this"
+        fi
     done
 }

@@ -4,6 +4,8 @@ services:
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: phpmyadmin.local.dev
+    depends_on:
+      - proxy
     env_file:
       - ${PWD}/env/phpmyadmin.env
     labels:
@@ -12,5 +14,3 @@ services:
       - traefik.http.routers.dbadmin.tls=true
     networks:
       - docker-traefik-https
-    depends_on:
-      - proxy
