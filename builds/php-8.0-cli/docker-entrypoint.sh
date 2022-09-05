@@ -11,7 +11,7 @@ echo "                    >'?'<"
 echo "                  ª( o o )ª"
 echo "----------------ooOO-(_)-OOoo-----------------"
 echo ""
-echo "       APACHE2/PHP 8.0 (openSUSE/Leap)"
+echo "        PHP 8.0 CLI (openSUSE/Leap)"
 echo
 echo $(tput sgr0)
 

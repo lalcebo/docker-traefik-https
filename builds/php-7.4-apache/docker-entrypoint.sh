@@ -15,10 +15,10 @@ echo "       APACHE2/PHP 7.4 (openSUSE/Leap)"
 echo
 echo $(tput sgr0)
 
-/usr/sbin/docker.sh # Main
-/usr/sbin/github.sh # GitHub Auth
-/usr/sbin/composer.sh # Composer Auth
+/docker.sh # docker gateway
+/github.sh # gitHub auth
+/composer.sh # composer auth
 
-# Run
+# run
 echo "[ENTRYPOINT INFO]: Docker container started."
 exec "$@"
