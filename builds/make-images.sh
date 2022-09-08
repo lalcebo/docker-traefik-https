@@ -3,8 +3,8 @@
 # shellcheck disable=SC2046
 # shellcheck disable=SC2002
 
-# get config variables from .env file.
-export $(cat .env | grep -v ^# | xargs)
+# common scripts
+. ./scripts/common.sh
 
 read -p "You want to build the images, will this take a while? " -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]; then

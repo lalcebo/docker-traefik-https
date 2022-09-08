@@ -4,6 +4,6 @@
 # shellcheck disable=SC2164
 # shellcheck disable=SC2006
 
-# Common scripts
+# common scripts
 . ./scripts/common.sh
 . ./scripts/services.sh
