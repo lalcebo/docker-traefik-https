@@ -8,7 +8,7 @@ tls:
     # another domain certificate
     #- certFile: /etc/traefik/certs/domain1.crt
     #  keyFile: /etc/traefik/certs/domain1.key
-    # anoter domain certificate
+    # another domain certificate
     #- certFile: /etc/traefik/certs/domain2.crt
     #  keyFile: /etc/traefik/certs/domain2.key
 
