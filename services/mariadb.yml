@@ -11,11 +11,13 @@ services:
       - mariadb-data:/var/lib/mysql:delegated
     environment:
       - MYSQL_ROOT_PASSWORD=${ROOT_PASSWORD}
+      - MYSQL_DATABASE=${STARTUP_DATABASE}
       - MYSQL_ALLOW_EMPTY_PASSWORD=true
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-p${ROOT_PASSWORD}"]
+      test: ["CMD", "mysqladmin", "ping", "-p ${ROOT_PASSWORD}"]
       retries: 3
       timeout: 5s
+      interval: 5s
     ports:
       - "3306:3306"
     networks:
