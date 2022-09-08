@@ -2,7 +2,7 @@ version: "3.7"
 services:
 
   redis:
-    image: redis
+    image: redis:7.0-alpine
     # Host(`redis.local.dev`) Used by add_hosts.sh script
     container_name: redis.local.dev
     restart: unless-stopped
@@ -13,6 +13,7 @@ services:
       test: ["CMD", "redis-cli", "ping"]
       retries: 3
       timeout: 5s
+      interval: 5s
     volumes:
       - redis-data:/data:delegated
     networks:
