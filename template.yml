@@ -16,8 +16,8 @@ services:
       - traefik.http.routers.<service_name>.tls=true
       # If the domain is different to default, you should set the domain.
       # NOTE: Remember generate a cert for all domain and subdomains
-      # - traefik.http.routers.<service_name>.domains[0].main=another-domain.dev
-      # - traefik.http.routers.<service_name>.domains[0].sans=*.another-domain.dev
+      # - traefik.http.routers.<service_name>.tls.domains[0].main=another-domain.dev
+      # - traefik.http.routers.<service_name>.tls.domains[0].sans=*.another-domain.dev
       # If port is different from 80, use the following service:
       # - traefik.http.services.<service_name>.loadbalancer.server.port=<port>
     networks:
