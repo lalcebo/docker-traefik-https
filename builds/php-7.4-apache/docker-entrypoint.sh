@@ -5,7 +5,6 @@
 
 set -e
 
-echo $(tput bold)
 echo
 echo "                    >'?'<"
 echo "                  ª( o o )ª"
@@ -13,7 +12,6 @@ echo "----------------ooOO-(_)-OOoo-----------------"
 echo ""
 echo "       APACHE2/PHP 7.4 (openSUSE/Leap)"
 echo
-echo $(tput sgr0)
 
 /docker.sh # docker gateway
 /github.sh # gitHub auth
