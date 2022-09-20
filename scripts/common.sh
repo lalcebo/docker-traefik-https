@@ -26,4 +26,4 @@ fi
 isWinPlatform && PATH_SEPARATOR=";" || PATH_SEPARATOR=":"
 
 #  fix .env file for unix format
-dos2unix -q .env
+isWinPlatform && dos2unix -q .env
