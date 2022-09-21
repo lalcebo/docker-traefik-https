@@ -10,6 +10,6 @@ if [[ -n $(command -v ping) ]]; then
     if [[ ${EXIT_CODE} -eq 2 ]]; then
       HOST_IP=$(ip route | awk 'NR==1 {print $3}')
       echo -e "$HOST_IP\t$DOCKER_INTERNAL_HOST" >> /etc/hosts
-      echo "$(datetime) added $DOCKER_INTERNAL_HOST to /etc/hosts"
+      echo "$(datetime) INFO added $DOCKER_INTERNAL_HOST to /etc/hosts"
     fi
 fi

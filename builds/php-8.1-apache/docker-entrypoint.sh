@@ -21,5 +21,5 @@ echo
 /github.sh # gitHub auth
 /composer.sh # composer auth
 
-echo "$(datetime) docker container started"
+echo "$(datetime) INFO docker container started"
 exec "$@"
