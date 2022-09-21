@@ -5,5 +5,4 @@
 docker-compose-local.yml
 .env
 config/traefik/certs/*
-data/
-.docker/
+.data/
