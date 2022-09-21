@@ -1,0 +1,12 @@
+# Log all DNS queries.
+log-queries
+
+# Serve all queries using a specific nameserver.
+server=1.1.1.1
+
+# Serve all .example.com queries using a specific nameserver.
+# server=/example.com/192.168.0.1
+
+# Explicitly define host-ip mappings.
+address=/local.dev/127.0.0.1
+#address=/other.domain.dev/127.0.0.1

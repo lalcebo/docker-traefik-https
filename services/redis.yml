@@ -3,7 +3,6 @@ services:
 
   redis:
     image: redis:7.0-alpine
-    # Host(`redis.local.dev`) Used by add_hosts.sh script
     container_name: redis.local.dev
     restart: unless-stopped
     ports:

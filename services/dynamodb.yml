@@ -3,7 +3,6 @@ services:
 
   dynamodb:
     image: amazon/dynamodb-local:latest
-    # Host(`dynamodb.local.dev`) Used by add_hosts.sh script
     container_name: dynamodb.local.dev
     restart: unless-stopped
     ports:

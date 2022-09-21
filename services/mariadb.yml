@@ -3,7 +3,6 @@ services:
 
   mariadb:
     image: mariadb:10.3.11
-    # Host(`mariadb.local.dev`) Used by add_hosts.sh script
     container_name: mariadb.local.dev
     restart: unless-stopped
     volumes:

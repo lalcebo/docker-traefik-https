@@ -3,7 +3,6 @@ services:
 
   mysql:
     image: mysql:8.0
-    # Host(`mysql.local.dev`) Used by add_hosts.sh script
     container_name: mysql.local.dev
     restart: unless-stopped
     volumes:

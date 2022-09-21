@@ -29,8 +29,9 @@ git clone https://github.com/lalcebo/docker-traefik-https.git && cd docker-traef
 # If it's the first install of mkcert, run
 mkcert -install
 
-# Copy config.yml.dist file to config.yml
+# Copy require config files
 cp config/traefik/config.yml.dist config/traefik/config.yml
+cp config/dnsmasq/dnsmasq.d/dnsmasq.conf.dist config/dnsmasq/dnsmasq.d/dnsmasq.conf
 
 # Generate certificate for domain 'local.dev', and their sub-domains '*.local.dev'
 # NOTE: You can generate as many certificates for domains as you want, remember to
@@ -73,8 +74,7 @@ fi
 
 ## Hosts & Dashboard
 
-* Use [add_hosts.sh](add_hosts.sh) script for automatically add the virtual hosts to your windows or linux hosts file.
-  Required admin privileges.
+* Set your nameserver to `127.0.0.1`, the dnsmasq server will resolve `*.local.dev` automatic, for any external domains it will use cloudflare nameserver.
 * You can now go to your browser at [proxy.local.dev](https://proxy.local.dev) for Træfik dashboard, enjoy 🚀!
 
 ## Postman

@@ -7,6 +7,8 @@ services:
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
+    depends_on:
+      - dnsmasq
     ports:
       - "80:80"
       - "443:443"
@@ -23,6 +25,26 @@ services:
       - traefik.http.routers.traefik.service=api@internal
       - traefik.http.routers.traefik.tls=true
       - traefik.http.services.traefik.loadbalancer.server.port=8080
+
+  dnsmasq:
+    image: ghcr.io/lalcebo/docker-traefik-https/dnsmasq:latest
+    container_name: dnsmasq.local.dev
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+    volumes:
+      - ${PWD}/config/dnsmasq/dnsmasq.d:/etc/dnsmasq.d:ro
+    cap_add:
+      - NET_ADMIN
+    healthcheck:
+      test: ["CMD", "dig", "cloudflare.com A +dnssec +multiline @127.0.0.1 || exit 1"]
+      retries: 3
+      timeout: 5s
+    networks:
+      - docker-traefik-https
 
 networks:
   docker-traefik-https:

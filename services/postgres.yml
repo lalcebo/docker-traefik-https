@@ -3,7 +3,6 @@ services:
 
   postgres:
     image: postgres:14.0-alpine
-    # Host(`postgres.local.dev`) Used by add_hosts.sh script
     container_name: postgres.local.dev
     restart: unless-stopped
     volumes:
