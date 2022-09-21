@@ -64,9 +64,10 @@ Example `hooks/pre-dynamodb` hook:
 #!/usr/bin/env sh
 
 # the folder for the db file must be writable by all
-if [ ! -d .docker/dynamodb ]; then
-    mkdir -p .docker/dynamodb
-    chmod -R 777 .docker/dynamodb
+DATA_PATH=.data/dynamodb
+
+if [ ! -d $DATA_PATH ]; then
+    mkdir -p $DATA_PATH && chmod -R 777 $DATA_PATH
 fi
 ```
 
