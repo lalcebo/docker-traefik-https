@@ -15,10 +15,13 @@ echo "       APACHE2/PHP 8.0 (openSUSE/Leap)"
 echo
 echo $(tput sgr0)
 
+# include common functions
+. /functions.sh
+
+# run
 /docker.sh # docker gateway
 /github.sh # gitHub auth
 /composer.sh # composer auth
 
-# run
-echo "[ENTRYPOINT INFO]: Docker container started."
+echo "$(datetime) docker container started"
 exec "$@"

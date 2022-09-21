@@ -13,10 +13,13 @@ echo ""
 echo "        PHP 7.4 CLI (openSUSE/Leap)"
 echo
 
+# include common functions
+. /functions.sh
+
+# run
 /docker.sh # docker gateway
 /github.sh # gitHub auth
 /composer.sh # composer auth
 
-# run
-echo "[ENTRYPOINT INFO]: Docker container started."
+echo "$(datetime) docker container started"
 exec "$@"

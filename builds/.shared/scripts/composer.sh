@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
-# Composer Auth
-if [[ -n ${GITHUB_TOKEN} && -n ${command -v composer} ]]; then
-    echo "[ENTRYPOINT INFO]: Set global GitHub auth to PHP composer."
+# include common functions
+. /functions.sh
+
+# composer auth
+if [[ -n ${GITHUB_TOKEN} && -n $(command -v composer) ]]; then
+    echo "$(datetime) set global github auth to composer."
     composer -q global config github-oauth.github.com "$GITHUB_TOKEN"
 fi

@@ -5,6 +5,9 @@ LABEL org.opencontainers.image.source="https://github.com/lalcebo/docker-traefik
 
 ARG NODEJS_VERSION=16
 
+# env
+ENV TZ=UTC
+
 RUN zypper --non-interactive refresh \
     # update and install packages
     && zypper up -y && zypper --non-interactive install \
@@ -38,9 +41,11 @@ ADD .shared/config/etc/supervisord.conf /etc/supervisord.conf
 COPY .shared/config/etc/ssh/ssh_config /etc/ssh/ssh_config
 
 # start
+ADD .shared/scripts/functions.sh /functions.sh
 ADD .shared/scripts/docker.sh /docker.sh
 ADD .shared/scripts/github.sh /github.sh
 
+RUN chmod +x /functions.sh
 RUN chmod +x /docker.sh
 RUN chmod +x /github.sh
 
