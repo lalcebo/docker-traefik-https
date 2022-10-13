@@ -6,18 +6,18 @@ services:
     container_name: minio.local.dev
     restart: unless-stopped
     ports:
-      - "9000:9000"
+      - "9005:9005"
     labels:
       - traefik.enable=true
       - traefik.http.routers.minio.rule=Host(`minio.local.dev`)
       - traefik.http.routers.minio.tls=true
       - traefik.http.services.minio.loadbalancer.server.port=9001
-    command: server --address :9000 --console-address :9001 --compat /data
+    command: server --address :9005 --console-address :9001 --compat /data
     environment:
       - MINIO_ROOT_USER=root
       - MINIO_ROOT_PASSWORD=${ROOT_PASSWORD}
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      test: ["CMD", "curl", "-f", "http://localhost:9005/minio/health/live"]
       retries: 3
       timeout: 5s
       interval: 5s
