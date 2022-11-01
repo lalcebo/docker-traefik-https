@@ -74,7 +74,12 @@ fi
 
 ## Hosts & Dashboard
 
-* Set your nameserver to `127.0.0.1`, the dnsmasq server will resolve `*.local.dev` automatic, for any external domains it will use cloudflare nameserver.
+```shell
+# dnsmasq server test
+dig @127.0.0.1 +noall +answer +stats whatever.local.dev
+```
+
+* Set your nameserver to `127.0.0.1`, the dnsmasq server will resolve `*.local.dev` automatic, for any external domains it will use Cloudflare nameserver.
 * You can now go to your browser at [proxy.local.dev](https://proxy.local.dev) for Træfik dashboard, enjoy 🚀!
 
 ## Postman
