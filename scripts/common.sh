@@ -17,12 +17,12 @@ export $(cat .env | grep -v ^# | xargs)
 # set delimiter values for looping through services to pull
 IFS=","
 
-if [[ ${#ROOT_PASSWORD} -lt 8 ]]; then
+if [ ${#ROOT_PASSWORD} -lt 8 ]; then
     echo "Root password value length should be at least 8 characters"
     exit 1
 fi
 
-if [[ -z "${COMPOSE_FILE}" ]]; then
+if [ -z "${COMPOSE_FILE}" ]; then
     echo "Missing env var COMPOSE_FILE, see https://docs.docker.com/compose/reference/envvars/#compose_file"
     exit 1
 fi
