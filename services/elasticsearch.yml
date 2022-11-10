@@ -6,7 +6,8 @@ services:
     container_name: elasticsearch.local.dev
     restart: unless-stopped
     ports:
-      - "9300:9300"
+      - "9200:9200/udp"
+      - "9200:9200/tcp"
     labels:
       - traefik.enable=true
       - traefik.http.routers.elasticsearch.rule=Host(`elasticsearch.local.dev`)
