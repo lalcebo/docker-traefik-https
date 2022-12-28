@@ -2,7 +2,7 @@ version: "3.7"
 services:
 
   mailhog:
-    image: mailhog/mailhog:latest
+    image: ghcr.io/lalcebo/docker-traefik-https/mailhog:latest
     container_name: mailhog.local.dev
     restart: unless-stopped
     ports:
