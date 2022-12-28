@@ -6,24 +6,39 @@
 # common scripts
 . ./scripts/common.sh
 
+# images
+IMAGES=(
+    dnsmasq
+    mailhog
+    php-7.4-cli
+    php-8.0-cli
+    php-8.1-cli
+    php-7.4-apache
+    php-8.0-apache
+    php-8.1-apache
+    php-8.1-nginx
+)
+
+# options
+OPTIONS=""
+
 read -p "You want to build the images, will this take a while? " -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo
     echo '---------------------------------------------------------------------------'
-    echo '--- Building Images'
+    echo '--- Building & Pushing: opensuse-base'
     echo '---------------------------------------------------------------------------'
-    # base
-    docker build -t "${DOCKER_REGISTRY}/opensuse-base" -f builds/Dockerfile builds/
-    # php cli
-    docker build -t "${DOCKER_REGISTRY}/php-7.4-cli" -f builds/php-7.4-cli/Dockerfile builds/
-    docker build -t "${DOCKER_REGISTRY}/php-8.0-cli" -f builds/php-8.0-cli/Dockerfile builds/
-    docker build -t "${DOCKER_REGISTRY}/php-8.1-cli" -f builds/php-8.1-cli/Dockerfile builds/
-    # apache
-    docker build -t "${DOCKER_REGISTRY}/php-7.4-apache" -f builds/php-7.4-apache/Dockerfile builds/
-    docker build -t "${DOCKER_REGISTRY}/php-8.0-apache" -f builds/php-8.0-apache/Dockerfile builds/
-    docker build -t "${DOCKER_REGISTRY}/php-8.1-apache" -f builds/php-8.1-apache/Dockerfile builds/
-    # nginx
-    docker build -t "${DOCKER_REGISTRY}/php-8.1-nginx" -f builds/php-8.1-nginx/Dockerfile builds/
-    # others
-    docker build -t "${DOCKER_REGISTRY}/dnsmasq" -f builds/dnsmasq/Dockerfile builds/
+    docker buildx build --platform "${BUILD_PLATFORM}" -t "${DOCKER_REGISTRY}/opensuse-base" -f builds/Dockerfile builds/
+    # build
+    read -p "You want to push the images after build? " -n 1 -r
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        OPTIONS="--push"
+    fi
+    for i in "${IMAGES[@]}"; do
+        echo
+        echo '---------------------------------------------------------------------------'
+        echo '--- Building & Pushing:' ${i}
+        echo '---------------------------------------------------------------------------'
+        docker buildx build ${OPTIONS} --platform "${BUILD_PLATFORM}" -t "${DOCKER_REGISTRY}/${i}" -f "builds/${i}/Dockerfile" builds/
+    done
 fi

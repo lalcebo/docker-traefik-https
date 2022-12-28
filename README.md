@@ -88,6 +88,21 @@ Enable CA Certificates setting and add "rootCA.pem" file. To know it location ru
 
 ![CA Certificates](docs/postman_settings_cert.png)
 
+## Build Images
+
+### Requirements
+
+- [Buildx](https://docs.docker.com/build/install-buildx/)
+
+```shell
+# If it's the first build, run
+docker run --privileged --rm tonistiigi/binfmt --install all
+docker buildx create --name multiarch --driver docker-container --use
+
+# Now, build images
+./builds/make-images.sh
+```
+
 ## About
 
 I'll try to maintain this project as simple as possible, but Pull Requests are welcomed!

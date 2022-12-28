@@ -11,8 +11,9 @@
 COMPOSE_FILE=""
 
 # get config variables from .env file & set docker registry
-export DOCKER_REGISTRY=ghcr.io/lalcebo/docker-traefik-https
 export $(cat .env | grep -v ^# | xargs)
+export BUILD_PLATFORM=${BUILD_PLATFORM:-"linux/amd64,linux/arm64"}
+export DOCKER_REGISTRY=${DOCKER_REGISTRY:-"ghcr.io/lalcebo/docker-traefik-https"}
 
 # set delimiter values for looping through services to pull
 IFS=","
