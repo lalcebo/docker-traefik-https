@@ -1,4 +1,4 @@
-FROM ghcr.io/lalcebo/docker-traefik-https/opensuse-base:latest as builder
+FROM ghcr.io/lalcebo/docker-traefik-https/base:latest as builder
 WORKDIR /builder
 
 ARG PHP_82_REPOSITORY=https://download.opensuse.org/repositories/home:13ilya/15.4/home:13ilya.repo
@@ -31,7 +31,7 @@ RUN mkdir xdebug \
     && make
 
 # final image
-FROM ghcr.io/lalcebo/docker-traefik-https/opensuse-base:latest
+FROM ghcr.io/lalcebo/docker-traefik-https/base:latest
 
 LABEL maintainer="Jorge P. Hernandez Lalcebo <lalcebo2003@gmail.com>"
 LABEL org.opencontainers.image.source="https://github.com/lalcebo/docker-traefik-https"

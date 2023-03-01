@@ -1,8 +1,8 @@
-FROM ghcr.io/lalcebo/docker-traefik-https/opensuse-base:latest as builder
+FROM ghcr.io/lalcebo/docker-traefik-https/base:latest as builder
 WORKDIR /builder
 
 ARG PHP_81_REPOSITORY=https://download.opensuse.org/repositories/devel:/languages:/php/openSUSE_Leap_15.4/devel:languages:php.repo
-ARG XDEBUG_VERSION=3.1.5
+ARG XDEBUG_VERSION=3.2.0
 
 # comunity repo for php 8.1
 RUN zypper --non-interactive ar -G ${PHP_81_REPOSITORY}
@@ -31,7 +31,7 @@ RUN mkdir xdebug \
     && make
 
 # final image
-FROM ghcr.io/lalcebo/docker-traefik-https/opensuse-base:latest
+FROM ghcr.io/lalcebo/docker-traefik-https/base:latest
 
 LABEL maintainer="Jorge P. Hernandez Lalcebo <lalcebo2003@gmail.com>"
 LABEL org.opencontainers.image.source="https://github.com/lalcebo/docker-traefik-https"
@@ -39,7 +39,7 @@ LABEL org.opencontainers.image.description="This image contains openSUSE Leap wi
 
 # args
 ARG PHP_81_REPOSITORY=https://download.opensuse.org/repositories/devel:/languages:/php/openSUSE_Leap_15.4/devel:languages:php.repo
-ARG XDEBUG_VERSION=3.1.5
+ARG XDEBUG_VERSION=3.2.0
 
 # env
 ENV PHP_MAX_EXECUTION_TIME=${PHP_MAX_EXECUTION_TIME:-30}

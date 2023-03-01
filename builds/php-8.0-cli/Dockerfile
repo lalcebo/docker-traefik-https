@@ -1,7 +1,7 @@
-FROM ghcr.io/lalcebo/docker-traefik-https/opensuse-base:latest as builder
+FROM ghcr.io/lalcebo/docker-traefik-https/base:latest as builder
 WORKDIR /builder
 
-ARG XDEBUG_VERSION=3.1.5
+ARG XDEBUG_VERSION=3.2.0
 
 RUN zypper up -y \
     # install packages
@@ -28,14 +28,14 @@ RUN mkdir xdebug \
     && make
 
 # final image
-FROM ghcr.io/lalcebo/docker-traefik-https/opensuse-base:latest
+FROM ghcr.io/lalcebo/docker-traefik-https/base:latest
 
 LABEL maintainer="Jorge P. Hernandez Lalcebo <lalcebo2003@gmail.com>"
 LABEL org.opencontainers.image.source="https://github.com/lalcebo/docker-traefik-https"
 LABEL org.opencontainers.image.description="This image contains openSUSE Leap with PHP 8.0 CLI, Composer & NodeJS. Use only for development."
 
 # args
-ARG XDEBUG_VERSION=3.1.5
+ARG XDEBUG_VERSION=3.2.0
 
 # env
 ENV PHP_MAX_EXECUTION_TIME=${PHP_MAX_EXECUTION_TIME:-30}

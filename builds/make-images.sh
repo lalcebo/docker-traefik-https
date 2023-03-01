@@ -28,9 +28,9 @@ read -p "You want to build the images, will this take a while? " -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo
     echo '---------------------------------------------------------------------------'
-    echo '--- Building & Pushing: opensuse-base'
+    echo '--- Building & Pushing: OS Base'
     echo '---------------------------------------------------------------------------'
-    docker buildx build --platform "${BUILD_PLATFORM}" -t "${DOCKER_REGISTRY}/opensuse-base" -f builds/Dockerfile builds/
+    docker buildx build --push --platform "${BUILD_PLATFORM}" -t "${DOCKER_REGISTRY}/base" -f builds/Dockerfile builds/
     # build
     read -p "You want to push the images after build? " -n 1 -r
     if [[ $REPLY =~ ^[Yy]$ ]]; then

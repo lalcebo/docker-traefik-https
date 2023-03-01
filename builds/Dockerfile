@@ -1,4 +1,4 @@
-FROM opensuse/leap:latest
+FROM opensuse/leap:15.4
 
 LABEL maintainer="Jorge P. Hernandez Lalcebo <lalcebo2003@gmail.com>"
 LABEL org.opencontainers.image.source="https://github.com/lalcebo/docker-traefik-https"
@@ -39,6 +39,9 @@ ADD .shared/config/etc/supervisord.conf /etc/supervisord.conf
 
 # ssh
 COPY .shared/config/etc/ssh/ssh_config /etc/ssh/ssh_config
+
+# npm
+RUN npm config set cache /tmp --global
 
 # start
 ADD .shared/scripts/functions.sh /functions.sh

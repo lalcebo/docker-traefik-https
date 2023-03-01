@@ -1,4 +1,4 @@
-FROM ghcr.io/lalcebo/docker-traefik-https/opensuse-base:latest
+FROM ghcr.io/lalcebo/docker-traefik-https/base:latest
 
 LABEL maintainer="Jorge P. Hernandez Lalcebo <lalcebo2003@gmail.com>"
 LABEL org.opencontainers.image.source="https://github.com/lalcebo/docker-traefik-https"
