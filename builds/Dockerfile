@@ -3,7 +3,7 @@ FROM opensuse/leap:latest
 LABEL maintainer="Jorge P. Hernandez Lalcebo <lalcebo2003@gmail.com>"
 LABEL org.opencontainers.image.source="https://github.com/lalcebo/docker-traefik-https"
 
-ARG NODEJS_VERSION=16
+ARG NODEJS_VERSION=18
 
 # env
 ENV TZ=UTC
