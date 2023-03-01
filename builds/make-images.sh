@@ -13,9 +13,11 @@ IMAGES=(
     php-7.4-cli
     php-8.0-cli
     php-8.1-cli
+    php-8.2-cli
     php-7.4-apache
     php-8.0-apache
     php-8.1-apache
+    php-8.2-apache
     php-8.1-nginx
 )
 
