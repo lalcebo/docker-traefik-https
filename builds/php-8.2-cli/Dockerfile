@@ -66,7 +66,7 @@ ENV PHP_XDEBUG_START_WITH_REQUEST=${PHP_XDEBUG_START_WITH_REQUEST:-default}
 ENV PHP_XDEBUG_CLIENT_DISCOVERY_HEADER=${PHP_XDEBUG_CLIENT_DISCOVERY_HEADER:-1}
 ENV PHP_XDEBUG_OUTPUT_DIR=${PHP_XDEBUG_OUTPUT_DIR:-/tmp}
 
-# comunity repo for php 8.1
+# comunity repo for php 8.2
 RUN zypper --non-interactive ar -G ${PHP_82_REPOSITORY}
 RUN zypper --non-interactive refresh
 
