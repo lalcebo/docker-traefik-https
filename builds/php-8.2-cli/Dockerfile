@@ -79,7 +79,7 @@ RUN zypper up -y && zypper --non-interactive install \
     php8-mbstring php8-mysql php8-opcache php8-openssl php8-pcntl \
     php8-pdo php8-pgsql php8-phar php8-posix php8-soap php8-zlib \
     php8-sockets php8-sodium php8-sqlite php8-tokenizer php8-xmlreader \
-    php8-xmlwriter php8-xsl php8-zip php8-readline \
+    php8-xmlwriter php8-xsl php8-zip php8-readline php8-redis \
     # uninstall supervisor
     && pip3 uninstall -y supervisor \
     && rm -rf /etc/supervisor.d \
