@@ -3,6 +3,7 @@ WORKDIR /builder
 
 ARG PHP_82_REPOSITORY=https://download.opensuse.org/repositories/home:13ilya/15.4/home:13ilya.repo
 ARG XDEBUG_VERSION=3.2.0
+ARG SWOOLE_VERSION=4.8.13
 
 # comunity repo for php 8.1
 RUN zypper --non-interactive ar -G ${PHP_82_REPOSITORY}
@@ -15,6 +16,8 @@ RUN zypper up -y \
         curl \
         unzip \
         libssh2-devel \
+        libbrotli-devel \
+        c-ares-devel \
         make \
         gcc \
         autoconf \
@@ -25,10 +28,23 @@ RUN mkdir xdebug \
     && cd xdebug \
     && curl -LO https://github.com/xdebug/xdebug/archive/${XDEBUG_VERSION}.zip \
     && unzip ${XDEBUG_VERSION}.zip \
+    && rm -f ${XDEBUG_VERSION}.zip \
     && cd xdebug-${XDEBUG_VERSION} \
     && phpize \
     && ./configure --enable-xdebug \
     && make
+
+RUN curl -LO https://github.com/swoole/swoole-src/archive/v${SWOOLE_VERSION}.zip \
+    && unzip v${SWOOLE_VERSION}.zip \
+    && rm -f v${SWOOLE_VERSION}.zip \
+    && cd swoole-src-${SWOOLE_VERSION} \
+    && phpize \
+    && ./configure \
+      --enable-openssl --enable-http2 --enable-brotli \
+      --enable-sockets --enable-mysqlnd --enable-cares \
+      --enable-swoole --enable-swoole-curl --enable-swoole-json \
+    && make \
+    && cd /builder
 
 # final image
 FROM ghcr.io/lalcebo/docker-traefik-https/base:latest
@@ -40,6 +56,7 @@ LABEL org.opencontainers.image.description="This image contains openSUSE Leap wi
 # args
 ARG PHP_82_REPOSITORY=https://download.opensuse.org/repositories/home:13ilya/15.4/home:13ilya.repo
 ARG XDEBUG_VERSION=3.2.0
+ARG SWOOLE_VERSION=4.8.13
 
 # env
 ENV PHP_MAX_EXECUTION_TIME=${PHP_MAX_EXECUTION_TIME:-30}
@@ -72,6 +89,7 @@ RUN zypper --non-interactive refresh
 
 # update and install packages
 RUN zypper up -y && zypper --non-interactive install \
+    libcares2 libopenssl3 libbrotlidec1 libbrotlienc1 \
     # php
     php8-cli php8-bcmath php8-bz2 php8-calendar php8-ctype php8-curl \
     php8-dba php8-enchant php8-exif php8-ftp php8-tidy php8-dom \
@@ -95,6 +113,9 @@ RUN php -r "echo file_get_contents('https://getcomposer.org/installer');" | \
 COPY --from=builder \
     /builder/xdebug/xdebug-${XDEBUG_VERSION}/modules/xdebug.so \
     /usr/lib64/php8/extensions/xdebug.so
+COPY --from=builder \
+    /builder/swoole-src-${SWOOLE_VERSION}/modules/swoole.so \
+    /usr/lib64/php8/extensions/swoole.so
 RUN chmod 644 /usr/lib64/php8/extensions/*.so
 
 # php

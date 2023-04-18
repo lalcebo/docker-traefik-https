@@ -7,6 +7,7 @@ LABEL org.opencontainers.image.description="This image contains openSUSE Leap Ng
 RUN zypper --non-interactive refresh \
     # update and install packages
     && zypper up -y && zypper --non-interactive install \
+        libcares2 libopenssl3 libbrotlidec1 libbrotlienc1 \
         # nginx
         nginx php8-fpm \
     # pip update and supervisor

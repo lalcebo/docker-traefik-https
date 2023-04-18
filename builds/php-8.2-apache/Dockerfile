@@ -25,8 +25,7 @@ ADD .shared/config/etc/supervisor.d/apache2.conf /etc/supervisor.d/apache2.conf
 
 # apache
 RUN ["a2enmod", "-d", "userdir"]
-RUN ["a2enmod", "rewrite"]
-RUN ["a2enmod", "php8"]
+RUN ["a2enmod", "rewrite", "php8", "proxy", "proxy_http", "proxy_http2", "proxy_wstunnel"]
 ADD .shared/config/etc/apache2/*.conf /etc/apache2/
 ADD .shared/config/etc/apache2/conf.d/php8.conf /etc/apache2/conf.d/php8.conf
 
