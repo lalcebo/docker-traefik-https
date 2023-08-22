@@ -3,23 +3,19 @@
 # shellcheck disable=SC2046
 # shellcheck disable=SC2002
 
-# common scripts
-. ./scripts/common.sh
+# get config variables from .env file & set docker registry
+export $(cat <.env | grep -v ^# | xargs)
+export BUILD_PLATFORM=${BUILD_PLATFORM:-"linux/amd64,linux/arm64"}
+export DOCKER_REGISTRY=${DOCKER_REGISTRY:-"ghcr.io/lalcebo"}
 
 # images
-IMAGES=(
+IMAGES="
     dnsmasq
-    mailhog
-    php-7.4-cli
-    php-8.0-cli
-    php-8.1-cli
-    php-8.2-cli
-    php-7.4-apache
-    php-8.0-apache
-    php-8.1-apache
-    php-8.2-apache
-    php-8.1-nginx
-)
+    php:7.2-fpm-alpine-nginx
+    php:7.4-fpm-alpine-nginx
+    php:8.0-fpm-alpine-nginx
+    php:8.2-fpm-alpine-nginx
+"
 
 # options
 OPTIONS=""
@@ -27,20 +23,14 @@ OPTIONS=""
 read -p "You want to build the images, will this take a while? " -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo
-    echo '---------------------------------------------------------------------------'
-    echo '--- Building & Pushing: OS Base'
-    echo '---------------------------------------------------------------------------'
-    docker buildx build --push --platform "${BUILD_PLATFORM}" -t "${DOCKER_REGISTRY}/base" -f builds/Dockerfile builds/
-    # build
     read -p "You want to push the images after build? " -n 1 -r
+    echo
+    echo 'Building images...'
+    echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         OPTIONS="--push"
     fi
-    for i in "${IMAGES[@]}"; do
-        echo
-        echo '---------------------------------------------------------------------------'
-        echo '--- Building & Pushing:' ${i}
-        echo '---------------------------------------------------------------------------'
-        docker buildx build ${OPTIONS} --platform "${BUILD_PLATFORM}" -t "${DOCKER_REGISTRY}/${i}" -f "builds/${i}/Dockerfile" builds/
+    for IMAGE in $IMAGES; do
+        docker buildx build $OPTIONS --provenance false --platform "$BUILD_PLATFORM" -t "$DOCKER_REGISTRY/$IMAGE" -f "builds/$(echo "$IMAGE" | tr ':' '-')/Dockerfile" builds/
     done
 fi

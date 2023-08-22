@@ -1,5 +1,6 @@
 FROM alpine:latest
 
+LABEL authors="Jorge P. Hernandez Lalcebo <lalcebo2003@gmail.com>"
 LABEL maintainer="Jorge P. Hernandez Lalcebo <lalcebo2003@gmail.com>"
 LABEL org.opencontainers.image.source="https://github.com/lalcebo/docker-traefik-https"
 LABEL org.opencontainers.image.description="This image contains Alpine DNSMasq server. Use only for development."
@@ -12,7 +13,7 @@ RUN apk add --no-cache --virtual=run-deps bash bind-tools dnsmasq
 RUN rm -rf /tmp/* /var/cache/apk/* /var/tmp/*
 
 # configs
-ADD .shared/config/etc/dnsmasq/dnsmasq.conf /etc/dnsmasq.conf
+ADD shared/config/etc/dnsmasq/dnsmasq.conf /etc/dnsmasq.conf
 
 # expose
 EXPOSE 53/tcp
@@ -20,10 +21,9 @@ EXPOSE 53/udp
 
 # start
 ADD dnsmasq/docker-entrypoint.sh /docker-entrypoint.sh
-ADD .shared/scripts/functions.sh /functions.sh
+ADD shared/scripts/commons.sh /usr/local/bin/
 
-RUN chmod +x /docker-entrypoint.sh
-RUN chmod +x /functions.sh
+RUN chmod +x /*.sh /usr/local/bin/*.sh
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["dnsmasq", "-q", "-k", "--user=dnsmasq"]

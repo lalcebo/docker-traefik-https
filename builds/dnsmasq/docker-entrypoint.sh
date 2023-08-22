@@ -1,17 +1,6 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
-set -e
-
-echo
-echo "                    >'?'<"
-echo "                  ª( o o )ª"
-echo "----------------ooOO-(_)-OOoo-----------------"
-echo ""
-echo "                DNSMASQ Server"
-echo
-
-# include common functions
-. /functions.sh
+/usr/local/bin/commons.sh # common functions
 
 # run
 echo "$(datetime) INFO docker container started"
