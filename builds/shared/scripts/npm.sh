@@ -1,5 +1,8 @@
 #!/usr/bin/env sh
 
+# common functions
+. /usr/local/bin/commons.sh
+
 # npm
 if [ -n "$(command -v npm)" ]; then
     echo "$(datetime) INFO set global NPM home directory"

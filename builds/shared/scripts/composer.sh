@@ -1,5 +1,8 @@
 #!/usr/bin/env sh
 
+# common functions
+. /usr/local/bin/commons.sh
+
 if [ -n "$(command -v composer)" ]; then
     echo "$(datetime) INFO set global PHP composer home directory"
     mkdir -p "$COMPOSER_HOME"

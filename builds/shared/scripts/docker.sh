@@ -2,6 +2,9 @@
 
 # shellcheck disable=SC2039
 
+# common functions
+. /usr/local/bin/commons.sh
+
 # docker internal host
 if [ -n "$(command -v ping)" ]; then
     DOCKER_INTERNAL_HOST="host.docker.internal"

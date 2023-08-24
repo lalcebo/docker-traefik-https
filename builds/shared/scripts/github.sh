@@ -3,6 +3,9 @@
 # shellcheck disable=SC2030
 # shellcheck disable=SC2039
 
+# common functions
+. /usr/local/bin/commons.sh
+
 # github auth
 if [ -n "$GITHUB_TOKEN" ] && [ -n "$(command -v git)" ]; then
     echo "$(datetime) INFO generating git config and credentials file in ${HOME}"
