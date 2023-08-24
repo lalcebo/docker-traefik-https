@@ -34,7 +34,8 @@ RUN docker-php-ext-enable redis \
 
 RUN apk del build-essentials \
     && rm -f /usr/src/php* \
-    && rm -rf /tmp/pear
+    && rm -rf /tmp/pear \
+    && rm -rf /var/www/*
 
 # php environment
 ENV PHP_MAX_EXECUTION_TIME=${PHP_MAX_EXECUTION_TIME:-30}
@@ -100,7 +101,7 @@ COPY shared/config/etc/nginx/http.d/* /etc/nginx/http.d/
 COPY shared/config/etc/ssh/ssh_config /etc/ssh/ssh_config
 
 EXPOSE 80
-ENV WORKDIR=${WORKDIR:-"/var/www/app"}
+ENV WORKDIR=${WORKDIR:-"/var/www/html"}
 ENV HANDLER=${HANDLER:-"public"}
 ENV PATH=$WORKDIR:$WORKDIR/vendor/bin:$WORKDIR/node_modules/.bin:$PATH
 WORKDIR $WORKDIR
