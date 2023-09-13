@@ -9,12 +9,12 @@ ARG XDEBUG_VERSION=3.1.4
 
 RUN apk add --no-cache libzip libpng libjpeg-turbo \
     libwebp freetype icu libevent nginx supervisor \
-    nodejs npm gawk git openssh libxml2
+    nodejs npm gawk git openssh libxml2 c-client
 
 RUN apk add --no-cache --virtual build-essentials \
     icu-dev icu-libs zlib-dev g++ make automake autoconf libzip-dev \
     libpng-dev libwebp-dev libjpeg-turbo-dev freetype-dev libevent-dev \
-    openssl-dev linux-headers libxml2-dev \
+    openssl-dev linux-headers libxml2-dev imap-dev \
     && docker-php-ext-configure gd \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install pdo_mysql \
@@ -24,6 +24,7 @@ RUN apk add --no-cache --virtual build-essentials \
     && docker-php-ext-install exif \
     && docker-php-ext-install zip \
     && docker-php-ext-install bcmath \
+    && docker-php-ext-install imap \
     && docker-php-ext-install pcntl \
     && docker-php-ext-install sockets \
     && docker-php-ext-install soap
