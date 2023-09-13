@@ -1,7 +1,11 @@
 FROM php:8.2-fpm-alpine3.18
 
-LABEL authors="Jorge P. Hernandez Lalcebo <lalcebo2003@gmail.com>"
-LABEL comment="This image contains NGINX with PHP 8.2 (xDebug, Composer) & NodeJS. Use only for development."
+LABEL org.opencontainers.image.title="NGINX (PHP 8.2)"
+LABEL org.opencontainers.image.description="This image contains NGINX with PHP 8.2 (xDebug, Composer) & NodeJS. Use only for development."
+LABEL org.opencontainers.image.source="https://github.com/lalcebo/docker-traefik-https"
+LABEL org.opencontainers.image.authors="Jorge P. Hernandez Lalcebo <lalcebo2003@gmail.com>"
+
+ARG XDEBUG_VERSION=3.2.2
 
 RUN apk add --no-cache libzip libpng libjpeg-turbo \
     libwebp freetype icu libevent nginx supervisor \

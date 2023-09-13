@@ -1,9 +1,9 @@
 FROM alpine:latest
 
-LABEL authors="Jorge P. Hernandez Lalcebo <lalcebo2003@gmail.com>"
-LABEL maintainer="Jorge P. Hernandez Lalcebo <lalcebo2003@gmail.com>"
+LABEL org.opencontainers.image.title="DNSMasq"
 LABEL org.opencontainers.image.source="https://github.com/lalcebo/docker-traefik-https"
 LABEL org.opencontainers.image.description="This image contains Alpine DNSMasq server. Use only for development."
+LABEL org.opencontainers.image.authors="Jorge P. Hernandez Lalcebo <lalcebo2003@gmail.com>"
 
 # update and install
 RUN apk upgrade --no-cache

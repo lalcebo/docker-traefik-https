@@ -1,7 +1,9 @@
 FROM php:7.4-fpm-alpine3.16
 
-LABEL authors="Jorge P. Hernandez Lalcebo <lalcebo2003@gmail.com>"
-LABEL comment="This image contains NGINX with PHP 7.4 (xDebug, Composer) & NodeJS. Use only for development."
+LABEL org.opencontainers.image.title="NGINX (PHP 7.4)"
+LABEL org.opencontainers.image.description="This image contains NGINX with PHP 7.4 (xDebug, Composer) & NodeJS. Use only for development."
+LABEL org.opencontainers.image.source="https://github.com/lalcebo/docker-traefik-https"
+LABEL org.opencontainers.image.authors="Jorge P. Hernandez Lalcebo <lalcebo2003@gmail.com>"
 
 ARG XDEBUG_VERSION=3.1.4
 
