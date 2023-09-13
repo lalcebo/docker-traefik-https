@@ -5,7 +5,7 @@ LABEL org.opencontainers.image.description="This image contains NGINX with PHP 7
 LABEL org.opencontainers.image.source="https://github.com/lalcebo/docker-traefik-https"
 LABEL org.opencontainers.image.authors="Jorge P. Hernandez Lalcebo <lalcebo2003@gmail.com>"
 
-ARG XDEBUG_VERSION=3.1.4
+ARG XDEBUG_VERSION=3.1.5
 
 RUN apk add --no-cache libzip libpng libjpeg-turbo \
     libwebp freetype icu libevent nginx supervisor \

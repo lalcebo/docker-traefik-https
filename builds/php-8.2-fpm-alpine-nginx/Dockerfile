@@ -29,7 +29,7 @@ RUN apk add --no-cache --virtual build-essentials \
     && docker-php-ext-install sockets \
     && docker-php-ext-install soap
 
-RUN pecl install ev event redis igbinary swoole xdebug
+RUN pecl install ev event redis igbinary swoole xdebug-${XDEBUG_VERSION}
 RUN docker-php-ext-enable redis \
     && docker-php-ext-enable ev \
     && docker-php-ext-enable event \
