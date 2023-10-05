@@ -15,6 +15,7 @@ IMAGES="
     php:7.4-fpm-alpine-nginx
     php:8.0-fpm-alpine-nginx
     php:8.2-fpm-alpine-nginx
+    php:8.3-fpm-alpine-nginx
 "
 
 # options
