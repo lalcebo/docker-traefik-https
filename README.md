@@ -4,7 +4,7 @@
 
 ## Introduction
 
-Traefik v2 on localhost with HTTPS support using **local.dev** domain. This project creates different server app
+`Traefik` on localhost with HTTPS support, using **.test** domain. This project creates different services
 containers to use for your projects on local like MySQL, MariaDB, Redis, Memcached or another.
 
 ### Requirements
@@ -26,65 +26,30 @@ SET COMPOSE_CONVERT_WINDOWS_PATHS=1
 # Clone
 git clone https://github.com/lalcebo/docker-traefik-https.git && cd docker-traefik-https
 
-# If it's the first install of mkcert, run
-mkcert -install
-
-# Copy require config files
-cp config/traefik/config.yml.dist config/traefik/config.yml
-cp config/dnsmasq/dnsmasq.d/dnsmasq.conf.dist config/dnsmasq/dnsmasq.d/dnsmasq.conf
-
-# Generate certificate for domain 'local.dev', and their sub-domains '*.local.dev'
-# NOTE: You can generate as many certificates for domains as you want, remember to
-#       edit the config.yml file and add config section for them.
-mkcert \
-  -cert-file config/traefik/certs/local.dev.crt \
-  -key-file config/traefik/certs/local.dev.key \
-  'local.dev' '*.local.dev'
-
-# Create network that will be used
-docker network create docker-traefik-https
-
-# Create .env file that will be use by scripts.
-# NOTE: Remember edit for enable the services you want.
-cp .env.dist .env
+# If it's the first install, run
+geeko -i
 
 # Now, start containers
-./start.sh
-```
+# NOTE: You can inspect the .env file before and change any values you want
+geeko -s
 
-## Hooks
-
-All hooks are stored in the hooks subdirectory.
-
-* The `pre-<service>` hook is run before start the container.
-* The `post-<service>` hook is run after start the container.
-* The `stop-<service>` hook is run after stop the container.
-
-Example `hooks/pre-dynamodb` hook:
-```shell
-#!/usr/bin/env sh
-
-# the folder for the db file must be writable by all
-DATA_PATH=.data/dynamodb
-
-if [ ! -d $DATA_PATH ]; then
-    mkdir -p $DATA_PATH && chmod -R 777 $DATA_PATH
-fi
+# For help, run
+geeko -h
 ```
 
 ## Hosts & Dashboard
 
 ```shell
 # dnsmasq server test
-dig @127.0.0.1 +noall +answer +stats whatever.local.dev
+dig @127.0.0.1 +noall +answer +stats whatever.test
 ```
 
-* Set your nameserver to `127.0.0.1`, the dnsmasq server will resolve `*.local.dev` automatic, for any external domains it will use Cloudflare nameserver.
-* You can now go to your browser at [proxy.local.dev](https://proxy.local.dev) for Træfik dashboard, enjoy 🚀!
+* Set your nameserver to `127.0.0.1`, the dnsmasq server will resolve `*.test` automatic, for any external domains it will use Cloudflare nameserver.
+* You can now go to your browser at [proxy.test](https://proxy.test) for `Træfik` dashboard, enjoy 🚀!
 
 ## Postman
 
-Enable CA Certificates setting and add "rootCA.pem" file. To know it location run ```mkcert --CAROOT```
+Add a custom CA Certificates setting using `rootCA.pem` file. To know it location run `mkcert --CAROOT`
 
 ![CA Certificates](docs/postman_settings_cert.png)
 
@@ -100,7 +65,7 @@ docker run --privileged --rm tonistiigi/binfmt --install all
 docker buildx create --name multiarch --driver docker-container --use
 
 # Now, build images
-./builds/make-images.sh
+./builds/make.sh
 ```
 
 ## About

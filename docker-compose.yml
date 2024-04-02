@@ -1,51 +1,58 @@
-version: "3.7"
+version: "3.8"
 services:
 
-  proxy:
-    image: traefik:v2.8
-    container_name: proxy.local.dev
-    restart: unless-stopped
+  traefik:
+    image: traefik:v2.11
+    container_name: traefik
+    restart: on-failure
     security_opt:
       - no-new-privileges:true
     depends_on:
-      - dnsmasq
+      dnsmasq:
+        condition: service_started
     ports:
       - "80:80"
       - "443:443"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ${PWD}/config/traefik:/etc/traefik:ro
+      - ./config/traefik:/etc/traefik:ro
     networks:
-      - docker-traefik-https
+      docker-devel-network:
+        ipv4_address: 162.27.0.2
     labels:
       # For more information, see: https://docs.traefik.io/providers/docker/#exposedbydefault
       - traefik.enable=true
-      - traefik.http.routers.traefik.rule=Host(`proxy.local.dev`)
+      - traefik.http.routers.traefik.rule=Host(`proxy.test`)
       - traefik.http.routers.traefik.entrypoints=https
       - traefik.http.routers.traefik.service=api@internal
       - traefik.http.routers.traefik.tls=true
       - traefik.http.services.traefik.loadbalancer.server.port=8080
 
   dnsmasq:
-    image: ghcr.io/lalcebo/docker-traefik-https/dnsmasq:latest
-    container_name: dnsmasq.local.dev
-    restart: unless-stopped
+    # noinspection ComposeUnknownValues
+    image: $DOCKER_REGISTRY/dnsmasq:latest
+    container_name: dnsmasq
+    restart: on-failure
     security_opt:
       - no-new-privileges:true
     ports:
       - "53:53/tcp"
       - "53:53/udp"
     volumes:
-      - ${PWD}/config/dnsmasq/dnsmasq.d:/etc/dnsmasq.d:ro
+      - ./config/dnsmasq/dnsmasq.d:/etc/dnsmasq.d:ro
     cap_add:
       - NET_ADMIN
     healthcheck:
-      test: ["CMD", "dig", "cloudflare.com A +dnssec +multiline @127.0.0.1 || exit 1"]
+      test: [ "CMD", "dig", "cloudflare.com A +dnssec +multiline @127.0.0.1 || exit 1" ]
       retries: 3
       timeout: 5s
     networks:
-      - docker-traefik-https
+      docker-devel-network:
+        ipv4_address: 162.27.0.3
 
 networks:
-  docker-traefik-https:
-    external: true
+  docker-devel-network:
+    name: docker-devel-network
+    ipam:
+      config:
+        - subnet: 162.27.0.0/16

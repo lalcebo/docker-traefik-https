@@ -1,11 +1,11 @@
-version: "3.7"
 services:
-
-  redis:
-    image: memcached
-    container_name: memcached.local.dev
+  memcached:
+    image: memcached:${MEMCACHED_VERSION:-1.6.26}
     restart: unless-stopped
     ports:
-      - "11211:11211"
+      - "${FORWARD_MEMCACHED_PORT:-11211}:11211"
+    depends_on:
+      traefik:
+        condition: service_started
     networks:
-      - docker-traefik-https
+      - docker-devel-network

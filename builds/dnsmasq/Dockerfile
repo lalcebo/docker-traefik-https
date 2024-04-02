@@ -7,7 +7,7 @@ LABEL org.opencontainers.image.authors="Jorge P. Hernandez Lalcebo <lalcebo2003@
 
 # update and install
 RUN apk upgrade --no-cache
-RUN apk add --no-cache --virtual=run-deps bash bind-tools dnsmasq
+RUN apk add --update --no-cache --virtual=run-deps bash bind-tools dnsmasq
 
 # clean
 RUN rm -rf /tmp/* /var/cache/apk/* /var/tmp/*
@@ -21,7 +21,7 @@ EXPOSE 53/udp
 
 # start
 ADD dnsmasq/docker-entrypoint.sh /docker-entrypoint.sh
-ADD shared/scripts/commons.sh /usr/local/bin/
+ADD shared/scripts/docker-functions.sh /usr/local/bin/
 
 RUN chmod +x /*.sh /usr/local/bin/*.sh
 

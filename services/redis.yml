@@ -1,22 +1,22 @@
-version: "3.7"
 services:
-
   redis:
-    image: redis:7.0-alpine
-    container_name: redis.local.dev
+    image: redis:${REDIS_VERSION:-7.0.2-alpine}
     restart: unless-stopped
+    volumes:
+      - redis-data:/data:delegated
     ports:
-      - "6379:6379"
-    command: ["redis-server", "--appendonly", "yes", "--requirepass ${ROOT_PASSWORD}"]
+      - "${FORWARD_REDIS_PORT:-6379}:6379"
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: [ "CMD", "redis-cli", "ping" ]
       retries: 3
       timeout: 5s
       interval: 5s
-    volumes:
-      - redis-data:/data:delegated
+    command: [ "redis-server", "--appendonly", "yes", "--requirepass $REDIS_PASSWORD" ]
+    depends_on:
+      traefik:
+        condition: service_started
     networks:
-      - docker-traefik-https
+      - docker-devel-network
 
 volumes:
   redis-data:

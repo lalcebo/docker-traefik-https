@@ -1,26 +1,28 @@
-version: "3.7"
 services:
-
   mariadb:
-    image: mariadb:10.3.11
-    container_name: mariadb.local.dev
+    image: mariadb:${MARIADB_VERSION:-10.11.4}
     restart: unless-stopped
     volumes:
-      - ${PWD}/config/mariadb/initdb.d:/docker-entrypoint-initdb.d:ro
+      - ./config/mariadb/initdb.d:/docker-entrypoint-initdb.d:ro
       - mariadb-data:/var/lib/mysql:delegated
+    ports:
+      - "${FORWARD_MARIADB_PORT:-3306}:3306"
     environment:
-      - MYSQL_ROOT_PASSWORD=${ROOT_PASSWORD}
-      - MYSQL_DATABASE=${STARTUP_DATABASE}
-      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+      MYSQL_ROOT_PASSWORD: "$MARIADB_PASSWORD"
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_DATABASE: "$MARIADB_STARTUP_DATABASE"
+      MYSQL_USER: "$MARIADB_USERNAME"
+      MYSQL_ALLOW_EMPTY_PASSWORD: true
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-p ${ROOT_PASSWORD}"]
+      test: [ "CMD", "mysqladmin", "-u root" , "-p $ROOT_PASSWORD", "ping" ]
       retries: 3
       timeout: 5s
       interval: 5s
-    ports:
-      - "3306:3306"
+    depends_on:
+      traefik:
+        condition: service_started
     networks:
-      - docker-traefik-https
+      - docker-devel-network
 
 volumes:
   mariadb-data:

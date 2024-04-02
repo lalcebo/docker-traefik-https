@@ -1,30 +1,30 @@
-version: "3.7"
 services:
-
   minio:
-    image: minio/minio:latest
-    container_name: minio.local.dev
+    image: minio/minio:${MINIO_VERSION:-RELEASE.2024-03-30T09-41-56Z}
     restart: unless-stopped
+    volumes:
+      - minio-data:/data:delegated
     ports:
-      - "9005:9005"
+      - "${FORWARD_MINIO_PORT:-9000}:9000"
+    environment:
+      MINIO_ROOT_USER: "$MINIO_USER"
+      MINIO_ROOT_PASSWORD: "$MINIO_PASSWORD"
+    command: server /data --console-address :8900
     labels:
       - traefik.enable=true
-      - traefik.http.routers.minio.rule=Host(`minio.local.dev`)
+      - traefik.http.routers.minio.rule=Host(`minio.test`)
       - traefik.http.routers.minio.tls=true
-      - traefik.http.services.minio.loadbalancer.server.port=9001
-    command: server --address :9005 --console-address :9001 --compat /data
-    environment:
-      - MINIO_ROOT_USER=root
-      - MINIO_ROOT_PASSWORD=${ROOT_PASSWORD}
+      - traefik.http.services.minio.loadbalancer.server.port=8900
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9005/minio/health/live"]
+      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
       retries: 3
       timeout: 5s
       interval: 5s
-    volumes:
-      - minio-data:/data:delegated
+    depends_on:
+      traefik:
+        condition: service_started
     networks:
-      - docker-traefik-https
+      - docker-devel-network
 
 volumes:
   minio-data:

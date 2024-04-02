@@ -2,20 +2,17 @@
 
 # shellcheck disable=SC2046
 # shellcheck disable=SC2002
+# shellcheck disable=SC2164
+
+# change directory to script
+cd $(dirname $(dirname $(readlink -f "$0")))
 
 # get config variables from .env file & set docker registry
 export $(cat <.env | grep -v ^# | xargs)
-export BUILD_PLATFORM=${BUILD_PLATFORM:-"linux/amd64,linux/arm64"}
-export DOCKER_REGISTRY=${DOCKER_REGISTRY:-"ghcr.io/lalcebo"}
 
 # images
 IMAGES="
-    dnsmasq
-    php:7.2-fpm-alpine-nginx
-    php:7.4-fpm-alpine-nginx
-    php:8.0-fpm-alpine-nginx
-    php:8.2-fpm-alpine-nginx
-    php:8.3-fpm-alpine-nginx
+    reverb
 "
 
 # options

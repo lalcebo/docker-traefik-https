@@ -4,7 +4,7 @@
 # shellcheck disable=SC2039
 
 # common functions
-. /usr/local/bin/commons.sh
+. /usr/local/bin/docker-functions.sh
 
 # github auth
 if [ -n "$GITHUB_TOKEN" ] && [ -n "$(command -v git)" ]; then
