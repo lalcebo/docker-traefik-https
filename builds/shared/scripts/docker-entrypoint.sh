@@ -1,17 +1,12 @@
 #!/usr/bin/env sh
 
-# nginx
-NGINX_DEFAULT_CONF=${NGINX_DEFAULT_CONF:-"/etc/nginx/http.d/default.conf"}
-sed -i "s|{WORKDIR}|$WORKDIR|g" "$NGINX_DEFAULT_CONF"
-sed -i "s|{HANDLER}|$HANDLER|g" "$NGINX_DEFAULT_CONF"
-
-/usr/local/bin/docker.sh # docker
-/usr/local/bin/github.sh # github
-/usr/local/bin/composer.sh # php composer
-/usr/local/bin/npm.sh # nodejs npm
+/usr/local/bin/docker-service.sh
+/usr/local/bin/docker-github.sh
+/usr/local/bin/docker-composer.sh
+/usr/local/bin/docker-nodejs.sh
 
 # common functions
-. /usr/local/bin/commons.sh
+. /usr/local/bin/docker-functions.sh
 
 # run
 echo "$(datetime) INFO docker container started"

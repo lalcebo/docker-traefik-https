@@ -1,0 +1,26 @@
+services:
+  pgsql:
+    image: postgres:${POSTGRES_VERSION:-16.2-alpine}
+    restart: unless-stopped
+    volumes:
+      - ./config/pgsql/initdb.d:/docker-entrypoint-initdb.d:ro
+      - pgsql-data:/var/lib/postgresql/data:delegated
+    ports:
+      - "${FORWARD_POSTGRES_PORT:-5432}:5432"
+    environment:
+      POSTGRES_DB: "$PGSQL_STARTUP_DATABASE"
+      POSTGRES_USER: "$PGSQL_USERNAME"
+      POSTGRES_PASSWORD: "$PGSQL_PASSWORD"
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "$PGSQL_DATABASE", "-U", "$PGSQL_USERNAME" ]
+      retries: 3
+      timeout: 5s
+      interval: 5s
+    depends_on:
+      traefik:
+        condition: service_started
+    networks:
+      - docker-devel-network
+
+volumes:
+  pgsql-data:

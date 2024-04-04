@@ -1,0 +1,29 @@
+services:
+  reverb:
+    # noinspection ComposeUnknownValues
+    image: $DOCKER_REGISTRY/reverb:latest
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - .data/rootCA.pem:/tmp/ca-certificates/rootCA.pem:ro
+    environment:
+      REVERB_APP_ID: $REVERB_APP_ID
+      REVERB_APP_KEY: $REVERB_APP_KEY
+      REVERB_APP_SECRET: $REVERB_APP_SECRET
+      APP_MAINTENANCE_DRIVER: ${REVERB_APP_MAINTENANCE_DRIVER:-file}
+      APP_MAINTENANCE_STORE: ${REVERB_APP_MAINTENANCE_STORE:-file}
+      LOG_LEVEL: ${REVERB_LOG_LEVEL:-error}
+      SESSION_DRIVER: ${REVERB_SESSION_DRIVER:-file}
+      CACHE_STORE: ${REVERB_CACHE_STORE:-file}
+      CACHE_PREFIX: ${REVERB_CACHE_PREFIX:-}
+      REDIS_HOST: ${REVERB_REDIS_HOST:-redis.test}
+      REDIS_PASSWORD: ${REVERB_REDIS_PASSWORD:-null}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.reverb.rule=Host(`reverb.test`)
+      - traefik.http.routers.reverb.tls=true
+    depends_on:
+      traefik:
+        condition: service_started
+    networks:
+      - docker-devel-network

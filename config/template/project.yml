@@ -1,0 +1,38 @@
+services:
+  <project_name>:
+    image: <docker_registry>/php:<php_version>-fpm-alpine-nginx
+    security_opt:
+      - no-new-privileges:true
+    dns:
+      - <dns_server>
+    volumes:
+      - <project_path>:/var/www/html:delegated
+      - .data/rootCA.pem:/tmp/ca-certificates/rootCA.pem:ro
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.<project_name>.rule=Host(`<project_name>.test`)
+      - traefik.http.routers.<project_name>.tls=true
+      # If the domain is different to default, you should set the domain.
+      # NOTE: Remember generate a cert for all domains and subdomains
+      # - traefik.http.routers.<project_name>.tls.domains[0].main=another-domain.dev
+      # - traefik.http.routers.<project_name>.tls.domains[0].sans=*.another-domain.dev
+      # If port is different from 80, use the following service:
+      # - traefik.http.services.<project_name>.loadbalancer.server.port=<port>
+    external_links:
+      # Overwrite links that do not need to be routed through the proxy.
+      # This is a hack to be able to use the <service>.test style hosts
+      # in the environment vars of the projects, example DB_HOST=mysql.test
+      # We don't add reverb because it is routed through the proxy using https
+      - dynamodb:dynamodb.test
+      - mailpit:mailpit.test
+      - mariadb:mariadb.test
+      - memcached:memcached.test
+      - minio:minio.test
+      - mysql:mysql.test
+      - postgres:postgres.test
+      - redis:redis.test
+    depends_on:
+      traefik:
+        condition: service_started
+    networks:
+      - docker-devel-network

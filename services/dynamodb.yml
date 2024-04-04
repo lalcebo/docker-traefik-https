@@ -1,15 +1,15 @@
-version: "3.7"
 services:
-
   dynamodb:
-    image: amazon/dynamodb-local:latest
-    container_name: dynamodb.local.dev
+    image: amazon/dynamodb-local:${DYNAMODB_VERSION:-2.3.0}
     restart: unless-stopped
-    ports:
-      - "8000:8000"
     volumes:
-      - .data/dynamodb:/home/dynamodblocal/data:delegated
+      - ./.data/dynamodb:/home/dynamodblocal/data:delegated
+    ports:
+      - "${FORWARD_DYNAMODB_PORT:-8000}:8000"
     working_dir: /home/dynamodblocal
-    command: ["-jar", "DynamoDBLocal.jar", "-sharedDb", "-dbPath", "./data"]
+    command: [ "-jar", "DynamoDBLocal.jar", "-sharedDb", "-dbPath", "./data" ]
+    depends_on:
+      traefik:
+        condition: service_started
     networks:
-      - docker-traefik-https
+      - docker-devel-network

@@ -1,0 +1,333 @@
+#!/usr/bin/env bash
+
+# shellcheck disable=SC2143
+# shellcheck disable=SC2181
+# shellcheck disable=SC2009
+# shellcheck disable=SC2164
+
+export LC_ALL=en_US.utf8
+
+# change directory to script
+cd $(dirname $(readlink -f "$0"))
+
+# require apps
+REQUIRE_APPS="docker,docker-compose,mkcert,openssl,diff"
+
+# get the current user, on windows is on username env var.
+USER=${USER:-$USERNAME}
+
+# ascii escape characters
+ESCAPE=$(echo -en "\033")
+ERROR="${ESCAPE}[1;31m"
+RESET=$(echo -en "${ESCAPE}[m\017")
+START=$(echo -en "\015${ESCAPE}[C${ESCAPE}[10D")
+
+# base path for certs
+CERTS_PATH_TRAEFIK="config/traefik/certs"
+
+# path to copy mkcert root ca
+CA_ROOT_PATH=.data/rootCA.pem
+
+# format to extract ip from container
+DOCKER_IP_FORMAT='{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}'
+
+help() {
+    cat <<EOF
+ How to use: $(basename "$0") [argument]
+   -i                              Initial setup.
+   -s                              Start all containers.
+   -k                              Stops all containers.
+   -r                              Restart all containers.
+   -u                              Recreate containers (Shutdown or up only required containers).
+   -c <app> <cmd>                  Run a command inside container.
+   -m <app> <num>                  Scale container to num instances.
+   -h                              Show this help message.
+
+ Example:
+   $(basename "$0") -c app composer install
+
+ Bugs to <lalcebo2003@gmail.com>
+
+EOF
+}
+
+function isWinPlatform() {
+    [ "$OSTYPE" == 'cygwin' ] || [ "$OSTYPE" == 'msys' ] || [ "$OSTYPE" == 'win32' ]
+}
+
+function isAppInstalled() {
+    test -x "$(which "$1" 2>/dev/null)" && return 0 || return 150
+}
+
+function isProjectInstalled() {
+    [ -e .env ] &&
+    [ -e config/traefik/config.yml ] &&
+    [ -e config/dnsmasq/dnsmasq.d/dnsmasq.conf ]
+}
+
+function checkSetup() {
+    isProjectInstalled || {
+        printf "${START}${ERROR}Run the initial setup first: <%s -i>${RESET}" "$(basename "$0")"
+        exit 150
+    }
+}
+
+function getAllHostsForMakeCerts() {
+    HOSTS=()
+    FILES=$(find . -type f -name '*.yml' -not -name "template*" -not -path "./.data/*" -not -path "./config/*")
+    for FILE in $FILES; do
+        # shellcheck disable=SC2016
+        # shellcheck disable=SC2179
+        HOSTS+=$(cat <"$FILE" | grep -Po '(?:`([^`]+)`)+' | tr '\n' ',' | sed 's/`//g')
+    done
+
+    echo "${HOSTS::-1}"
+}
+
+function createEnvFiles() {
+    # if os is windows use windows path format for home directory.
+    isWinPlatform && {
+        CURRENT_DIR=$PWD && cd ~ && HOME=$(pwd -W) && cd "$CURRENT_DIR" || exit
+    }
+
+    # ask values
+    read -rep "PROJECTS ROOT: " -i "$HOME/Projects" PROJECTS_ROOT
+    read -rep "SERVICES PASSWORD: " -i "ChangeMe$." ROOT_PASSWORD
+
+    echo
+    echo 'Creating projects root folders...'
+    mkdir -p "$PROJECTS_ROOT"
+
+    # create .env file
+    cat <.env.dist | {
+        sed -e 's,{PROJECTS_ROOT},'"$PROJECTS_ROOT"',g' |
+        sed -e 's,{ROOT_PASSWORD},'"$ROOT_PASSWORD"',g'
+    } >.env
+
+    echo 'Install the local CA in the system trust store...'
+    mkcert -install
+
+    # make ssl cert files
+    echo 'Create SSL certs files...'
+    mkcert -cert-file $CERTS_PATH_TRAEFIK/test.crt -key-file $CERTS_PATH_TRAEFIK/test.key $(getAllHostsForMakeCerts | tr ',' ' ')
+}
+
+function setup() {
+    echo
+    echo 'Start docker project setup...'
+    echo
+
+    if [[ -e .env ]]; then
+        read -p "The .env file exists, are you sure want to overwrite? " -n 1 -r
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            echo
+            createEnvFiles
+            echo "Done!"
+            echo
+        fi
+        echo
+    else
+        createEnvFiles
+
+        echo
+        echo '--- Create Traefik, DNSMasq configs...'
+        echo
+
+        cp -f config/dnsmasq/dnsmasq.d/dnsmasq.conf.dist config/dnsmasq/dnsmasq.d/dnsmasq.conf
+        cp -f config/traefik/config.yml.dist config/traefik/config.yml
+
+        echo 'Open .env file and add any service do you want start.'
+        echo "Done!"
+        echo
+    fi
+}
+
+for APP in $(echo "$REQUIRE_APPS" | tr "," "\n"); do
+    isAppInstalled "$APP"
+    if [[ $? != 0 ]]; then
+        printf "${START}${ERROR}The application \"%s\" is not installed.${RESET}" "$APP"
+        exit $?
+    fi
+done
+
+# set path separator
+isWinPlatform && PATH_SEPARATOR=';' || PATH_SEPARATOR=':'
+
+isProjectInstalled && {
+    # export all environment vars
+    export $(cat < .env | grep -v ^# | xargs)
+
+    if [[ -z "$COMPOSE_FILE" ]]; then
+        echo 'Missing env var compose_file, see https://docs.docker.com/compose/reference/envvars/#compose_file'
+        exit 150
+    fi
+
+    # add all enable services
+    SERVICES=$(echo "$ENABLE_SERVICES" | tr ',' '\n')
+    for SERVICE in $SERVICES; do
+        COMPOSE_FILE="$COMPOSE_FILE$PATH_SEPARATOR./services/$SERVICE.yml"
+    done
+
+    # get all projects
+    PROJECTS=$(find "$PROJECTS_ROOT" -maxdepth 1 -type d | sed "s/${PROJECTS_ROOT//\//\\/}//g")
+}
+
+function addProjects() {
+    for PROJECT in $PROJECTS; do
+        PROJECT_PATH="projects/${PROJECT#\/}.yml"
+        export COMPOSE_FILE="${COMPOSE_FILE}${PATH_SEPARATOR}./${PROJECT_PATH}"
+    done
+}
+
+function createProjects() {
+    # remove all projects files
+    rm -f projects/*.yml
+
+    DNS_IP=$(docker inspect -f $DOCKER_IP_FORMAT dnsmasq)
+
+    for PROJECT in $PROJECTS; do
+        # create project yml file
+        PROJECT_PATH="projects/${PROJECT#\/}.yml"
+
+        PROJECT_ENV_PREFIX=$(echo "${PROJECT#\/}" | tr '[:lower:]' '[:upper:]')
+        PHP_VERSION=$(eval "echo \${${PROJECT_ENV_PREFIX}_PHP_VERSION:-8.3}")
+
+        cat < config/template/project.yml | {
+            sed -e 's,<docker_registry>,'"$DOCKER_REGISTRY"',g' |
+            sed -e 's,<php_version>,'"$PHP_VERSION"',g' |
+            sed -e 's,<dns_server>,'"$DNS_IP"',g' |
+            sed -e 's,<project_path>,'"$PROJECTS_ROOT/${PROJECT#\/}"',g' |
+            sed -e 's,<project_name>,'"${PROJECT#\/}"',g'
+        } > "$PROJECT_PATH"
+    done
+}
+
+function addCaRootToDataFolder() {
+    if [[ ! -e "$CA_ROOT_PATH" ]]; then
+        cp -f "$(mkcert -CAROOT)/rootCA.pem" "$CA_ROOT_PATH"
+    fi
+}
+
+function isContainerRunning() {
+    if [[ -z "$1" || -z "$(docker-compose ps --services | grep "\<$1\>")" ]]; then
+        echo
+        printf "${START}${ERROR}Container <<%s>> is not running.${RESET}" "$CONTAINER"
+        echo
+        exit 150
+    fi
+}
+
+function createCertFiles() {
+    addCaRootToDataFolder
+    LIST_HOSTS_CURRENT=$(openssl x509 -text -noout -in "$CERTS_PATH_TRAEFIK/test.crt" | grep -e 'DNS:' | sed 's/[DNS\: ]//g' | tr ',' '\n')
+
+    if [[ -n $(diff <(echo "$LIST_HOSTS_CURRENT") <(getAllHostsForMakeCerts | tr ',' '\n')) ]]; then
+        echo 'Update SSL certs files...'
+        mkcert -cert-file $CERTS_PATH_TRAEFIK/test.crt -key-file $CERTS_PATH_TRAEFIK/test.key $(getAllHostsForMakeCerts | tr ',' ' ')
+
+        # recreate proxy container for reload new certs
+        if [[ -n "$(docker-compose ps --services | grep "\<proxy\>")" ]]; then
+            # add tunnels file to composer to avoid found orphan containers warning.
+            docker-compose up -d --force-recreate --remove-orphans proxy
+        fi
+    fi
+}
+
+function startProjects() {
+    # create all projects yml files
+    createProjects
+    createCertFiles
+    addProjects
+
+    # start projects
+    docker-compose up -d --remove-orphans
+}
+
+function scaleContainer() {
+    addProjects
+
+    CONTAINER=$2
+    INSTANCES=$3
+
+    isContainerRunning "$CONTAINER"
+
+    docker-compose up -d --scale "$CONTAINER=$INSTANCES"
+}
+
+function commandContainer() {
+    addProjects
+
+    CONTAINER=$2
+    shift 2
+
+    isContainerRunning "$CONTAINER"
+
+    echo
+    echo "Run command on container <$CONTAINER>..."
+    echo
+
+    docker-compose exec -u "$(id -u)" "$CONTAINER" "$@"
+}
+
+function startContainers() {
+    docker-compose up -d --remove-orphans
+    startProjects
+}
+
+function stopContainers() {
+    docker-compose down --remove-orphans
+}
+
+function recreateContainers() {
+    createProjects
+    addProjects
+    createCertFiles
+    docker-compose up -d --remove-orphans
+}
+
+while getopts ":c:m:ihskru" arg; do
+    case $arg in
+    s)
+        checkSetup
+        createCertFiles
+        startContainers
+        exit 0
+        ;;
+    k)
+        checkSetup
+        stopContainers
+        exit 0
+        ;;
+    u)
+        checkSetup
+        createCertFiles
+        recreateContainers
+        exit 0
+        ;;
+    r)
+        checkSetup
+        stopContainers
+        createCertFiles
+        startContainers
+        exit 0
+        ;;
+    m)
+        checkSetup
+        scaleContainer "$@"
+        exit 0
+        ;;
+    c)
+        checkSetup
+        commandContainer "$@"
+        exit 0
+        ;;
+    i)
+        setup
+        exit 0
+        ;;
+    h | *)
+        help
+        exit 0
+        ;;
+    esac
+done

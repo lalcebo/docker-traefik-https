@@ -1,8 +1,8 @@
 .DS_Store
 .idea
 .vscode/
+*.env
 # This allows you to build a local docker stack that doesn't get committed to the repo.
 docker-compose-local.yml
-.env
 config/traefik/certs/*
 .data/

@@ -1,27 +1,33 @@
-FROM php:8.3-rc-fpm-alpine3.18
+FROM php:8.3-fpm-alpine3.19
 
 LABEL org.opencontainers.image.title="NGINX (PHP 8.3)"
 LABEL org.opencontainers.image.description="This image contains NGINX with PHP 8.3 (xDebug, Composer) & NodeJS. Use only for development."
 LABEL org.opencontainers.image.source="https://github.com/lalcebo/docker-traefik-https"
 LABEL org.opencontainers.image.authors="Jorge P. Hernandez Lalcebo <lalcebo2003@gmail.com>"
 
-ARG XDEBUG_VERSION=3.3.0alpha2
+ARG XDEBUG_VERSION=3.3.1
+ARG EV_VERSION=1.1.5
+ARG EVENT_VERSION=3.0.8
+ARG IMAGICK_VERSION=3.7.0
 
-RUN apk add --no-cache libzip libpng libjpeg-turbo \
-    libwebp freetype icu libevent nginx supervisor \
-    nodejs npm gawk git openssh libxml2 c-client
+RUN apk add --update --no-cache libzip libpng libjpeg-turbo \
+    libwebp freetype icu libevent nginx supervisor libpq gmp \
+    nodejs npm gawk git openssh libxml2 c-client libgomp imagemagick
 
-RUN apk add --no-cache --virtual build-essentials \
-    icu-dev icu-libs zlib-dev g++ make automake autoconf libzip-dev \
-    libpng-dev libwebp-dev libjpeg-turbo-dev freetype-dev libevent-dev \
-    openssl-dev linux-headers libxml2-dev imap-dev \
+RUN apk add --update --no-cache --virtual build-essentials \
+    icu-dev icu-libs zlib-dev g++ make automake autoconf libzip-dev libpq-dev \
+    libpng-dev libwebp-dev libjpeg-turbo-dev freetype-dev libevent-dev pcre-dev \
+    openssl-dev linux-headers libxml2-dev imap-dev libtool imagemagick-dev gmp-dev \
     && docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install -j$(nproc) gd \
-    && docker-php-ext-install pdo_mysql \
     && docker-php-ext-install mysqli \
+    && docker-php-ext-install pdo_mysql \
     && docker-php-ext-install intl \
     && docker-php-ext-install opcache \
+    && docker-php-ext-install pgsql \
+    && docker-php-ext-install pdo_pgsql \
     && docker-php-ext-install exif \
+    && docker-php-ext-install gmp \
     && docker-php-ext-install zip \
     && docker-php-ext-install bcmath \
     && docker-php-ext-install imap \
@@ -29,13 +35,19 @@ RUN apk add --no-cache --virtual build-essentials \
     && docker-php-ext-install sockets \
     && docker-php-ext-install soap
 
-RUN pecl install ev event redis igbinary swoole xdebug-${XDEBUG_VERSION}
+RUN pecl install redis igbinary swoole redis \
+    ev-${EV_VERSION} \
+    event-${EVENT_VERSION} \
+    xdebug-${XDEBUG_VERSION}
+    #imagick-${IMAGICK_VERSION}
+
 RUN docker-php-ext-enable redis \
     && docker-php-ext-enable ev \
     && docker-php-ext-enable event \
     && docker-php-ext-enable igbinary \
     && docker-php-ext-enable swoole \
     && docker-php-ext-enable xdebug \
+    #&& docker-php-ext-enable imagick \
     && docker-php-source delete
 
 RUN apk del build-essentials \
@@ -59,8 +71,8 @@ ENV PHP_SESSION_SAVE_PATH=${PHP_SESSION_SAVE_PATH:-/tmp}
 ENV PHP_REALPATH_CACHE_SIZE=${PHP_REALPATH_CACHE_SIZE:-4096K}
 ENV PHP_REALPATH_CACHE_TTL=${PHP_REALPATH_CACHE_TTL:-120}
 ENV PHP_VARIABLES_ORDER=${PHP_VARIABLES_ORDER:-EGPCS}
-ENV PHP_CURL_CA_INFO=${PHP_CURL_CA_INFO:-}
-ENV PHP_OPENSSL_CA_FILE=${PHP_OPENSSL_CA_FILE:-}
+ENV PHP_CURL_CA_INFO=${PHP_CURL_CA_INFO:-/tmp/ca-certificates/rootCA.pem}
+ENV PHP_OPENSSL_CA_FILE=${PHP_OPENSSL_CA_FILE:-/tmp/ca-certificates/rootCA.pem}
 
 # xdebug
 ENV PHP_XDEBUG_IDEKEY=${PHP_XDEBUG_IDEKEY:-PHPSTORM}
@@ -70,10 +82,11 @@ ENV PHP_XDEBUG_MODE=${PHP_XDEBUG_MODE:-develop,debug,profile}
 ENV PHP_XDEBUG_START_WITH_REQUEST=${PHP_XDEBUG_START_WITH_REQUEST:-default}
 ENV PHP_XDEBUG_CLIENT_DISCOVERY_HEADER=${PHP_XDEBUG_CLIENT_DISCOVERY_HEADER:-1}
 ENV PHP_XDEBUG_OUTPUT_DIR=${PHP_XDEBUG_OUTPUT_DIR:-/tmp}
+ENV PHP_XDEBUG_LOG_LEVEL=${PHP_XDEBUG_LOG_LEVEL:-1}
 
 # install composer
 ENV COMPOSER_HOME=${COMPOSER_HOME:-"/tmp/composer"}
-ENV COMPOSER_ALLOW_SUPERUSER=1
+ENV COMPOSER_CACHE_DIR=/dev/null
 RUN php -r "echo file_get_contents('https://getcomposer.org/installer');" | \
     php -- --install-dir=/usr/local/bin --filename=composer
 
@@ -84,11 +97,13 @@ ENV NPM_HOME=${NPM_HOME:-"/tmp/npm"}
 RUN rm -fr \
     /usr/local/etc/php-fpm.* \
     /usr/local/etc/php-fpm.d/* \
-    /usr/local/etc/php/* \
     /usr/local/etc/php/conf.d/*
 COPY shared/config/usr/local/etc/php/ /usr/local/etc/php/
 COPY shared/config/usr/local/etc/php-fpm.conf /usr/local/etc/
 COPY shared/config/usr/local/etc/php-fpm.d/ /usr/local/etc/php-fpm.d/
+
+RUN rm -f \
+    /usr/local/etc/php/conf.d/20-docker-php-ext-imagick.ini
 
 # supervisor
 COPY shared/config/etc/supervisor/supervisord.conf /etc/supervisord.conf
@@ -102,9 +117,11 @@ COPY shared/config/etc/nginx/http.d/* /etc/nginx/http.d/
 COPY shared/config/etc/ssh/ssh_config /etc/ssh/ssh_config
 
 EXPOSE 80
+
 ENV WORKDIR=${WORKDIR:-"/var/www/html"}
 ENV HANDLER=${HANDLER:-"public"}
 ENV PATH=$WORKDIR:$WORKDIR/vendor/bin:$WORKDIR/node_modules/.bin:$PATH
+
 WORKDIR $WORKDIR
 
 # www
@@ -117,11 +134,11 @@ RUN { \
 
 # scripts
 ADD shared/scripts/docker-entrypoint.sh /
-ADD shared/scripts/commons.sh /usr/local/bin/
-ADD shared/scripts/docker.sh /usr/local/bin/
-ADD shared/scripts/composer.sh /usr/local/bin/
-ADD shared/scripts/github.sh /usr/local/bin/
-ADD shared/scripts/npm.sh /usr/local/bin/
+ADD shared/scripts/docker-functions.sh /usr/local/bin/
+ADD shared/scripts/docker-service.sh /usr/local/bin/
+ADD shared/scripts/docker-composer.sh /usr/local/bin/
+ADD shared/scripts/docker-github.sh /usr/local/bin/
+ADD shared/scripts/docker-nodejs.sh /usr/local/bin/
 RUN chmod +x /*.sh /usr/local/bin/*.sh
 
 ENTRYPOINT ["/docker-entrypoint.sh"]

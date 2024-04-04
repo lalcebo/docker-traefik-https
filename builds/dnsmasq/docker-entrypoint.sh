@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 
-/usr/local/bin/commons.sh # common functions
+# common functions
+. /usr/local/bin/docker-functions.sh
 
 # run
 echo "$(datetime) INFO docker container started"
