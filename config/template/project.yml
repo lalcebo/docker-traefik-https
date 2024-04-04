@@ -29,7 +29,7 @@ services:
       - memcached:memcached.test
       - minio:minio.test
       - mysql:mysql.test
-      - postgres:postgres.test
+      - pgsql:pgsql.test
       - redis:redis.test
     depends_on:
       traefik:
