@@ -12,6 +12,12 @@ export $(cat <.env | grep -v ^# | xargs)
 
 # images
 IMAGES="
+    dnsmasq
+    php:7.2-fpm-alpine-nginx
+    php:7.4-fpm-alpine-nginx
+    php:8.0-fpm-alpine-nginx
+    php:8.2-fpm-alpine-nginx
+    php:8.3-fpm-alpine-nginx
     reverb
 "
 
