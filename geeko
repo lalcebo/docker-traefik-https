@@ -10,6 +10,10 @@ export LC_ALL=en_US.utf8
 # change directory to script
 cd $(dirname $(readlink -f "$0"))
 
+# php version install
+PHP_CLI_VERSION=8.3.4
+COMPOSER_VERSION=2.7.2
+
 # require apps
 REQUIRE_APPS="docker,docker-compose,curl,openssl,diff,mkcert"
 
@@ -92,7 +96,7 @@ function createEnvFiles() {
     read -rep "SERVICES PASSWORD: " -i "ChangeMe$." ROOT_PASSWORD
 
     echo
-    echo 'Creating projects root folders...'
+    echo "Creating projects root folders..."
     mkdir -p "$PROJECTS_ROOT"
 
     # create .env file
@@ -101,17 +105,58 @@ function createEnvFiles() {
         sed -e 's,{ROOT_PASSWORD},'"$ROOT_PASSWORD"',g'
     } >.env
 
-    echo 'Install the local CA in the system trust store...'
+    echo "Install the local CA in the system trust store..."
     mkcert -install
 
     # make ssl cert files
-    echo 'Create SSL certs files...'
+    echo "Creating SSL certs files..."
     mkcert -cert-file $CERTS_PATH_TRAEFIK/test.crt -key-file $CERTS_PATH_TRAEFIK/test.key $(getAllHostsForMakeCerts | tr ',' ' ')
+}
+
+function addCaRootToDataFolder() {
+    CA_ROOT_PATH=.data/cacert.pem
+    if [[ ! -e "$CA_ROOT_PATH" ]]; then
+        {
+            curl -s https://curl.se/ca/cacert.pem
+            echo
+            echo "MKCert Development CA $(date '+%Y')"
+            echo "=================================="
+            cat $(mkcert -CAROOT)/rootCA.pem
+        } >> "$CA_ROOT_PATH"
+    fi
+}
+
+function installDependencies() {
+    # development bin path
+    BIN_PATH=.data/bin
+
+    mkdir -p $BIN_PATH
+    export PATH=$BIN_PATH:$PATH
+
+    TARGET_OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+    TARGET_ARCH=$(uname -m)
+
+    echo "Getting required dependencies..."
+    echo
+
+    addCaRootToDataFolder
+
+    echo " - PHP v$PHP_CLI_VERSION"
+    curl -s "https://dl.static-php.dev/static-php-cli/common/php-$PHP_CLI_VERSION-cli-$TARGET_OS-$TARGET_ARCH.tar.gz" | tar -zx -C $BIN_PATH
+    {
+        echo curl.cainfo = "$(pwd)/.data/cacert.pem"
+        echo openssl.cafile = "$(pwd)/.data/cacert.pem"
+        echo pcre.jit=0
+        echo output_buffering=4096
+    } > "$BIN_PATH/php.ini"
+
+    echo -e " - Composer v$COMPOSER_VERSION"
+    php -r "echo file_get_contents('https://getcomposer.org/installer');" | php -- --quiet --version=$COMPOSER_VERSION --install-dir=$BIN_PATH --filename=composer
 }
 
 function setup() {
     echo
-    echo 'Start docker project setup...'
+    echo 'Start development project setup...'
     echo
 
     if [[ -e .env ]]; then
@@ -125,15 +170,19 @@ function setup() {
         echo
     else
         createEnvFiles
+        installDependencies
 
         echo
-        echo '--- Create Traefik, DNSMasq configs...'
+        echo "Create Traefik, DNSMasq configs..."
         echo
 
         cp -f config/dnsmasq/dnsmasq.d/dnsmasq.conf.dist config/dnsmasq/dnsmasq.d/dnsmasq.conf
         cp -f config/traefik/config.yml.dist config/traefik/config.yml
 
-        echo 'Open .env file and add any service do you want start.'
+        echo "Edit your ~/. bashrc file and add the following line at the bottom:"
+        echo "export PATH=\$PATH:$PWD/$BIN_PATH"
+        echo
+        echo "Edit the .env file and add any service do you want start."
         echo "Done!"
         echo
     fi
@@ -155,7 +204,7 @@ isProjectInstalled && {
     export $(cat < .env | grep -v ^# | xargs)
 
     if [[ -z "$COMPOSE_FILE" ]]; then
-        echo 'Missing env var compose_file, see https://docs.docker.com/compose/reference/envvars/#compose_file'
+        echo "Missing env var compose_file, see https://docs.docker.com/compose/reference/envvars/#compose_file"
         exit 150
     fi
 
@@ -199,23 +248,10 @@ function createProjects() {
     done
 }
 
-function addCaRootToDataFolder() {
-    CA_ROOT_PATH=.data/cacert.pem
-    if [[ ! -e "$CA_ROOT_PATH" ]]; then
-        {
-            curl -s https://curl.se/ca/cacert.pem
-            echo
-            echo "MKCert Development CA $(date '+%Y')"
-            echo "=================================="
-            cat $(mkcert -CAROOT)/rootCA.pem
-        } >> "$CA_ROOT_PATH"
-    fi
-}
-
 function isContainerRunning() {
     if [[ -z "$1" || -z "$(docker-compose ps --services | grep "\<$1\>")" ]]; then
         echo
-        printf "${START}${ERROR}Container <<%s>> is not running.${RESET}" "$CONTAINER"
+        printf "${START}${ERROR}Container <%s> is not running.${RESET}" "$CONTAINER"
         echo
         exit 150
     fi
@@ -226,7 +262,7 @@ function createCertFiles() {
     LIST_HOSTS_CURRENT=$(openssl x509 -text -noout -in "$CERTS_PATH_TRAEFIK/test.crt" | grep -e 'DNS:' | sed 's/[DNS\: ]//g' | tr ',' '\n')
 
     if [[ -n $(diff <(echo "$LIST_HOSTS_CURRENT") <(getAllHostsForMakeCerts | tr ',' '\n')) ]]; then
-        echo 'Update SSL certs files...'
+        echo "Update SSL certs files..."
         mkcert -cert-file $CERTS_PATH_TRAEFIK/test.crt -key-file $CERTS_PATH_TRAEFIK/test.key $(getAllHostsForMakeCerts | tr ',' ' ')
 
         # recreate proxy container for reload new certs
