@@ -7,7 +7,7 @@ services:
       - <dns_server>
     volumes:
       - <project_path>:/var/www/html:delegated
-      - .data/rootCA.pem:/tmp/ca-certificates/rootCA.pem:ro
+      - .data/cacert.pem:/tmp/cacert.pem:ro
     labels:
       - traefik.enable=true
       - traefik.http.routers.<project_name>.rule=Host(`<project_name>.test`)

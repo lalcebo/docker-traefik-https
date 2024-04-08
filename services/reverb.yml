@@ -5,7 +5,7 @@ services:
     security_opt:
       - no-new-privileges:true
     volumes:
-      - .data/rootCA.pem:/tmp/ca-certificates/rootCA.pem:ro
+      - .data/cacert.pem:/tmp/cacert.pem:ro
     environment:
       REVERB_APP_ID: $REVERB_APP_ID
       REVERB_APP_KEY: $REVERB_APP_KEY

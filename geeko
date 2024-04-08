@@ -11,7 +11,7 @@ export LC_ALL=en_US.utf8
 cd $(dirname $(readlink -f "$0"))
 
 # require apps
-REQUIRE_APPS="docker,docker-compose,mkcert,openssl,diff"
+REQUIRE_APPS="docker,docker-compose,curl,openssl,diff,mkcert"
 
 # get the current user, on windows is on username env var.
 USER=${USER:-$USERNAME}
@@ -24,9 +24,6 @@ START=$(echo -en "\015${ESCAPE}[C${ESCAPE}[10D")
 
 # base path for certs
 CERTS_PATH_TRAEFIK="config/traefik/certs"
-
-# path to copy mkcert root ca
-CA_ROOT_PATH=.data/rootCA.pem
 
 # format to extract ip from container
 DOCKER_IP_FORMAT='{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}'
@@ -203,8 +200,15 @@ function createProjects() {
 }
 
 function addCaRootToDataFolder() {
+    CA_ROOT_PATH=.data/cacert.pem
     if [[ ! -e "$CA_ROOT_PATH" ]]; then
-        cp -f "$(mkcert -CAROOT)/rootCA.pem" "$CA_ROOT_PATH"
+        {
+            curl -s https://curl.se/ca/cacert.pem
+            echo
+            echo "MKCert Development CA $(date '+%Y')"
+            echo "=================================="
+            cat $(mkcert -CAROOT)/rootCA.pem
+        } >> "$CA_ROOT_PATH"
     fi
 }
 
