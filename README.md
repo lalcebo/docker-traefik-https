@@ -11,7 +11,6 @@ containers to use for your projects on local like MySQL, MariaDB, Redis, Memcach
 
 - [Docker](https://www.docker.com)
 - [Docker Compose](https://docs.docker.com/compose/install)
-- [MKCert](https://github.com/FiloSottile/mkcert)
 
 ### WARNING FOR MICROSOFT WINDOWS!!!
 
