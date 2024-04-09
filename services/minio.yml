@@ -1,7 +1,7 @@
 services:
   minio:
     image: minio/minio:${MINIO_VERSION:-RELEASE.2024-03-30T09-41-56Z}
-    restart: unless-stopped
+    restart: on-failure
     volumes:
       - minio-data:/data:delegated
     ports:

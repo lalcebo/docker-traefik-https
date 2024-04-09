@@ -1,7 +1,7 @@
 services:
   dynamodb:
     image: amazon/dynamodb-local:${DYNAMODB_VERSION:-2.3.0}
-    restart: unless-stopped
+    restart: on-failure
     volumes:
       - ./.data/dynamodb:/home/dynamodblocal/data:delegated
     ports:

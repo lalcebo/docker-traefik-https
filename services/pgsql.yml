@@ -1,7 +1,7 @@
 services:
   pgsql:
     image: postgres:${POSTGRES_VERSION:-16.2-alpine}
-    restart: unless-stopped
+    restart: on-failure
     volumes:
       - ./config/pgsql/initdb.d:/docker-entrypoint-initdb.d:ro
       - pgsql-data:/var/lib/postgresql/data:delegated

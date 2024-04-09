@@ -1,7 +1,7 @@
 services:
   mariadb:
     image: mariadb:${MARIADB_VERSION:-10.11.4}
-    restart: unless-stopped
+    restart: on-failure
     volumes:
       - ./config/mariadb/initdb.d:/docker-entrypoint-initdb.d:ro
       - mariadb-data:/var/lib/mysql:delegated

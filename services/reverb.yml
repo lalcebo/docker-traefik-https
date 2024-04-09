@@ -2,6 +2,7 @@ services:
   reverb:
     # noinspection ComposeUnknownValues
     image: $DOCKER_REGISTRY/reverb:latest
+    restart: on-failure
     security_opt:
       - no-new-privileges:true
     volumes:

@@ -1,7 +1,7 @@
 services:
   redis:
     image: redis:${REDIS_VERSION:-7.0.2-alpine}
-    restart: unless-stopped
+    restart: on-failure
     volumes:
       - redis-data:/data:delegated
     ports:
