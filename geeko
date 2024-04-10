@@ -265,7 +265,7 @@ function createProjects() {
 function isContainerRunning() {
     if [[ -z "$1" || -z "$(docker-compose ps --services | grep "\<$1\>")" ]]; then
         echo
-        printf "${START}${ERROR}Container <%s> is not running.${RESET}" "$CONTAINER"
+        printf "${START}${ERROR}Container <%s> is not running.${RESET}" "$1"
         echo
         exit 150
     fi
@@ -294,7 +294,7 @@ function startProjects() {
     addProjects
 
     # start projects
-    docker-compose up -d
+    docker-compose up -d --remove-orphans
 }
 
 function scaleContainer() {
@@ -334,9 +334,11 @@ function stopContainers() {
 }
 
 function recreateContainers() {
+    isContainerRunning "traefik"
+    isContainerRunning "dnsmasq"
+
     rm -f projects/*.yml
     startProjects
-    docker-compose up -d --remove-orphans
 }
 
 while getopts ":c:m:ihskru" arg; do
