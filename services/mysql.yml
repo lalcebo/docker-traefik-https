@@ -17,7 +17,7 @@ services:
       test: [ "CMD", "mysqladmin", "-u root" , "-p $ROOT_PASSWORD", "ping" ]
       retries: 3
       timeout: 5s
-      interval: 5s
+      interval: 1m
     depends_on:
       traefik:
         condition: service_started

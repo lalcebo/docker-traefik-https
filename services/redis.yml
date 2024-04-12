@@ -10,7 +10,7 @@ services:
       test: [ "CMD", "redis-cli", "ping" ]
       retries: 3
       timeout: 5s
-      interval: 5s
+      interval: 1m
     command: [ "redis-server", "--appendonly", "yes", "--requirepass $REDIS_PASSWORD" ]
     depends_on:
       traefik:

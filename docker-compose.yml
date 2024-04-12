@@ -46,6 +46,7 @@ services:
       test: [ "CMD", "dig", "cloudflare.com A +dnssec +multiline @127.0.0.1 || exit 1" ]
       retries: 3
       timeout: 5s
+      interval: 1m
     networks:
       docker-devel-network:
         ipv4_address: 162.27.0.3

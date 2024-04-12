@@ -17,7 +17,7 @@ services:
       test: [ "CMD", "curl", "-f", "http://localhost:7700/health" ]
       retries: 3
       timeout: 5s
-      interval: 5s
+      interval: 1m
     depends_on:
       traefik:
         condition: service_started
