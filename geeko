@@ -11,7 +11,8 @@ export LC_ALL=en_US.utf8
 cd $(dirname $(readlink -f "$0"))
 
 # php version install
-PHP_CLI_VERSION=8.3.4
+PHP_BUILD_FLAVOR=bulk
+PHP_CLI_VERSION=8.3.3
 COMPOSER_VERSION=2.7.2
 MKCERT_VERSION=1.4.4
 
@@ -154,7 +155,7 @@ function installDependencies() {
     curl -sL https://curl.se/ca/cacert.pem -o .data/cacert.pem
 
     echo " - PHP v$PHP_CLI_VERSION"
-    curl -sL "https://dl.static-php.dev/static-php-cli/common/php-$PHP_CLI_VERSION-cli-$TARGET_OS-$TARGET_ARCH.tar.gz" | tar -zx -C $BIN_PATH
+    curl -sL "https://dl.static-php.dev/static-php-cli/$PHP_BUILD_FLAVOR/php-$PHP_CLI_VERSION-cli-$TARGET_OS-$TARGET_ARCH.tar.gz" | tar -zx -C $BIN_PATH
 
     {
         echo curl.cainfo = "$(pwd)/.data/cacert.pem"
