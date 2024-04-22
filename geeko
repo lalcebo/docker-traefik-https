@@ -194,7 +194,7 @@ function setup() {
         cp -f config/dnsmasq/dnsmasq.d/dnsmasq.conf.dist config/dnsmasq/dnsmasq.d/dnsmasq.conf
         cp -f config/traefik/config.yml.dist config/traefik/config.yml
 
-        echo "Edit your ~/. bashrc file and add the following line at the bottom:"
+        echo "Edit your ~/.bashrc file and add the following line at the bottom:"
         echo "export PATH=\$PATH:$PWD/$BIN_PATH"
         echo
         echo "Edit the .env file and add any service do you want start."
