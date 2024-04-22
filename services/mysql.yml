@@ -14,7 +14,7 @@ services:
       MYSQL_USER: "$MYSQL_USERNAME"
       MYSQL_ALLOW_EMPTY_PASSWORD: true
     healthcheck:
-      test: [ "CMD", "mysqladmin", "-u root" , "-p $ROOT_PASSWORD", "ping" ]
+      test: [ "CMD", "mysqladmin", "-u root" , "-p $MYSQL_PASSWORD", "ping" ]
       retries: 3
       timeout: 5s
       interval: 1m
