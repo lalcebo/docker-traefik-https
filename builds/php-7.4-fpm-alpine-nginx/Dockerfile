@@ -34,12 +34,14 @@ RUN apk add --update --no-cache --virtual build-essentials \
 
 RUN pecl install redis igbinary \
     imagick-${IMAGICK_VERSION} \
-    xdebug-${XDEBUG_VERSION}
+    xdebug-${XDEBUG_VERSION} \
+    mongodb
 
 RUN docker-php-ext-enable redis \
     && docker-php-ext-enable igbinary \
     && docker-php-ext-enable xdebug \
     && docker-php-ext-enable imagick \
+    && docker-php-ext-enable mongodb \
     && docker-php-source delete
 
 RUN apk del build-essentials \

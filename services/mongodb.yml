@@ -1,0 +1,24 @@
+services:
+  mongodb:
+    image: mongo:${MONGODB_VERSION:-7.0}
+    restart: on-failure
+    volumes:
+      - mongodb-data:/data/db:delegated
+    ports:
+      - "${FORWARD_MONGODB_PORT:-27017}:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "$MONGODB_USERNAME"
+      MONGO_INITDB_ROOT_PASSWORD: "$MONGODB_PASSWORD"
+    healthcheck:
+      test: echo 'db.runCommand({serverStatus:1}).ok' | mongosh admin -u "$MONGODB_USERNAME" -p "$MONGODB_PASSWORD" --quiet | grep 1
+      retries: 3
+      timeout: 5s
+      interval: 1m
+    depends_on:
+      traefik:
+        condition: service_started
+    networks:
+      - docker-devel-network
+
+volumes:
+  mongodb-data:

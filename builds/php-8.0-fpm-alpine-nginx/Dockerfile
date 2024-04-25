@@ -38,7 +38,8 @@ RUN pecl install redis igbinary swoole \
     ev-${EV_VERSION} \
     event-${EVENT_VERSION} \
     xdebug-${XDEBUG_VERSION} \
-    imagick-${IMAGICK_VERSION}
+    imagick-${IMAGICK_VERSION} \
+    mongodb
 
 RUN docker-php-ext-enable redis \
     && docker-php-ext-enable ev \
@@ -47,6 +48,7 @@ RUN docker-php-ext-enable redis \
     && docker-php-ext-enable swoole \
     && docker-php-ext-enable xdebug \
     && docker-php-ext-enable imagick \
+    && docker-php-ext-enable mongodb \
     && docker-php-source delete
 
 RUN apk del build-essentials \

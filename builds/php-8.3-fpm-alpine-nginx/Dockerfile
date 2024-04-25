@@ -38,7 +38,8 @@ RUN apk add --update --no-cache --virtual build-essentials \
 RUN pecl install redis igbinary swoole redis \
     ev-${EV_VERSION} \
     event-${EVENT_VERSION} \
-    xdebug-${XDEBUG_VERSION}
+    xdebug-${XDEBUG_VERSION} \
+    mongodb
     #imagick-${IMAGICK_VERSION}
 
 RUN docker-php-ext-enable redis \
@@ -47,6 +48,7 @@ RUN docker-php-ext-enable redis \
     && docker-php-ext-enable igbinary \
     && docker-php-ext-enable swoole \
     && docker-php-ext-enable xdebug \
+    && docker-php-ext-enable mongodb \
     #&& docker-php-ext-enable imagick \
     && docker-php-source delete
 
