@@ -17,6 +17,7 @@ IMAGES="
     php:8.0-fpm-alpine-nginx
     php:8.2-fpm-alpine-nginx
     php:8.3-fpm-alpine-nginx
+    dnsmasq
     reverb
 "
 
@@ -35,5 +36,6 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     fi
     for IMAGE in $IMAGES; do
         docker buildx build $OPTIONS --provenance false --platform "$BUILD_PLATFORM" -t "$DOCKER_REGISTRY/$IMAGE" -f "builds/$(echo "$IMAGE" | tr ':' '-')/Dockerfile" builds/
+        #echo docker build -t "$DOCKER_REGISTRY/$IMAGE" -f "builds/$(echo "$IMAGE" | tr ':' '-')/Dockerfile" builds/
     done
 fi
