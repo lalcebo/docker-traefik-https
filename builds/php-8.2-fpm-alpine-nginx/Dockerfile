@@ -9,6 +9,7 @@ ARG XDEBUG_VERSION=3.3.1
 ARG EV_VERSION=1.1.5
 ARG EVENT_VERSION=3.0.8
 ARG IMAGICK_VERSION=3.7.0
+ARG MONGODB_VERSION=1.18.1
 
 RUN apk add --update --no-cache libzip libpng libjpeg-turbo \
     libwebp freetype icu libevent nginx supervisor libpq gmp \
@@ -40,7 +41,7 @@ RUN pecl install redis igbinary swoole \
     event-${EVENT_VERSION} \
     xdebug-${XDEBUG_VERSION} \
     imagick-${IMAGICK_VERSION} \
-    mongodb
+    mongodb-${MONGODB_VERSION}
 
 RUN docker-php-ext-enable redis \
     && docker-php-ext-enable ev \

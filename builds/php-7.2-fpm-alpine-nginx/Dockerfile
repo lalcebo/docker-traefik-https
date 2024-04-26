@@ -7,6 +7,7 @@ LABEL org.opencontainers.image.authors="Jorge P. Hernandez Lalcebo <lalcebo2003@
 
 ARG XDEBUG_VERSION=3.1.5
 ARG IMAGICK_VERSION=3.7.0
+ARG MONGODB_VERSION=1.16.2
 
 RUN apk add --no-cache libzip libpng libjpeg-turbo \
     libwebp freetype icu libevent nginx supervisor postgresql-libs \
@@ -35,7 +36,7 @@ RUN apk add --no-cache --virtual build-essentials \
 RUN pecl install redis igbinary \
     xdebug-${XDEBUG_VERSION} \
     imagick-${IMAGICK_VERSION} \
-    mongodb
+    mongodb-${MONGODB_VERSION}
 
 RUN docker-php-ext-enable redis \
     && docker-php-ext-enable igbinary \
