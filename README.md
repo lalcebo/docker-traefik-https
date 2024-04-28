@@ -1,6 +1,7 @@
 # Traefik v2 HTTPS
 
 [![Software License][ico-license]][link-license]
+![PRs][ico-pull-requests]
 
 ## Introduction
 
@@ -76,5 +77,6 @@ I'll try to maintain this project as simple as possible, but Pull Requests are w
 The MIT License (MIT). Please see [License File][link-license] for more information.
 
 [ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=for-the-badge&color=blue
+[ico-pull-requests]: https://img.shields.io/badge/pr-WELCOME-brightgreen.svg?style=for-the-badge
 
 [link-license]: LICENSE
