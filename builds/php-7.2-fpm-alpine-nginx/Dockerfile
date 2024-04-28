@@ -11,12 +11,12 @@ ARG MONGODB_VERSION=1.16.2
 
 RUN apk add --no-cache libzip libpng libjpeg-turbo \
     libwebp freetype icu libevent nginx supervisor postgresql-libs \
-    nodejs npm gawk git openssh libxml2 c-client imagemagick libgomp
+    nodejs npm gawk git openssh libxml2 c-client imagemagick libgomp gmp
 
 RUN apk add --no-cache --virtual build-essentials \
     icu-dev icu-libs zlib-dev g++ make automake autoconf libzip-dev postgresql-dev \
     libpng-dev libwebp-dev libjpeg-turbo-dev freetype-dev libevent-dev pcre-dev \
-    openssl-dev linux-headers libxml2-dev imap-dev imagemagick-dev libtool \
+    openssl-dev linux-headers libxml2-dev imap-dev imagemagick-dev libtool gmp-dev \
     && docker-php-ext-configure gd \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install mysqli \
@@ -26,6 +26,7 @@ RUN apk add --no-cache --virtual build-essentials \
     && docker-php-ext-install pgsql \
     && docker-php-ext-install pdo_pgsql \
     && docker-php-ext-install exif \
+    && docker-php-ext-install gmp \
     && docker-php-ext-install zip \
     && docker-php-ext-install bcmath \
     && docker-php-ext-install imap \

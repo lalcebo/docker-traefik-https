@@ -12,13 +12,13 @@ ARG IMAGICK_VERSION=3.7.0
 ARG MONGODB_VERSION=1.18.1
 
 RUN apk add --update --no-cache libzip libpng libjpeg-turbo \
-    libwebp freetype icu libevent nginx supervisor libpq \
+    libwebp freetype icu libevent nginx supervisor libpq gmp \
     nodejs npm gawk git openssh libxml2 c-client imagemagick libgomp
 
 RUN apk add --update --no-cache --virtual build-essentials \
     icu-dev icu-libs zlib-dev g++ make automake autoconf libzip-dev libpq-dev \
     libpng-dev libwebp-dev libjpeg-turbo-dev freetype-dev libevent-dev pcre-dev \
-    openssl-dev linux-headers libxml2-dev imap-dev imagemagick-dev libtool \
+    openssl-dev linux-headers libxml2-dev imap-dev imagemagick-dev libtool gmp-dev \
     && docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install mysqli \
@@ -28,6 +28,7 @@ RUN apk add --update --no-cache --virtual build-essentials \
     && docker-php-ext-install pgsql \
     && docker-php-ext-install pdo_pgsql \
     && docker-php-ext-install exif \
+    && docker-php-ext-install gmp \
     && docker-php-ext-install zip \
     && docker-php-ext-install bcmath \
     && docker-php-ext-install imap \
