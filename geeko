@@ -94,8 +94,11 @@ function createEnvFiles() {
     }
 
     # ask values
-    read -rep "PROJECTS ROOT: " -i "$HOME/Projects" PROJECTS_ROOT
-    read -rep "SERVICES PASSWORD: " -i "ChangeMe$." ROOT_PASSWORD
+    read -rep "PROJECTS ROOT (Default: $HOME/Projects): " PROJECTS_ROOT
+    read -rep "SERVICES PASSWORD (Default: ChangeMe$.): " ROOT_PASSWORD
+
+    PROJECTS_ROOT=${PROJECTS_ROOT:-$HOME/Projects}
+    ROOT_PASSWORD=${ROOT_PASSWORD:-ChangeMe$.}
 
     echo
     echo "Creating projects root folders..."
