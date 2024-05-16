@@ -17,7 +17,7 @@ COMPOSER_VERSION=2.7.2
 MKCERT_VERSION=1.4.4
 
 # require apps
-REQUIRE_APPS="docker,docker-compose,curl,openssl,diff"
+REQUIRE_APPS="docker,docker-compose,curl,openssl,diff,awk"
 
 # get the current user, on windows is on username env var.
 USER=${USER:-$USERNAME}
@@ -81,7 +81,7 @@ function getAllHostsForMakeCerts() {
     for FILE in $FILES; do
         # shellcheck disable=SC2016
         # shellcheck disable=SC2179
-        HOSTS+=$(cat <"$FILE" | grep -Po '(?:`([^`]+)`)+' | tr '\n' ',' | sed 's/`//g')
+        HOSTS+=$(awk -F'[`]' '{ for (i=2; i<=NF; i+=2) print $i }' "$FILE" | tr '\n' ',')
     done
 
     echo "${HOSTS::-1}"
