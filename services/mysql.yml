@@ -6,7 +6,7 @@ services:
       - ./config/mysql/initdb.d:/docker-entrypoint-initdb.d:ro
       - mysql-data:/var/lib/mysql:delegated
     ports:
-      - "${FORWARD_MARIADB_PORT:-3306}:3306"
+      - "${FORWARD_MYSQL_PORT:-3306}:3306"
     environment:
       MYSQL_ROOT_PASSWORD: "$MYSQL_PASSWORD"
       MYSQL_ROOT_HOST: "%"
